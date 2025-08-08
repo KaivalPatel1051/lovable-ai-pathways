@@ -36,6 +36,14 @@ const DashboardHeader = () => {
         <Button 
           variant="ghost" 
           size="icon"
+          onClick={() => {
+            import("@/hooks/use-toast").then(({ toast }) => {
+              toast({
+                title: "Notifications",
+                description: "No new notifications at this time.",
+              });
+            });
+          }}
           className="text-white hover:bg-white/20 transition-smooth"
         >
           <Bell className="h-5 w-5" />
@@ -43,6 +51,14 @@ const DashboardHeader = () => {
         <Button 
           variant="ghost" 
           size="icon"
+          onClick={() => {
+            import("@/hooks/use-toast").then(({ toast }) => {
+              toast({
+                title: "Settings",
+                description: "Settings panel coming soon!",
+              });
+            });
+          }}
           className="text-white hover:bg-white/20 transition-smooth"
         >
           <Settings className="h-5 w-5" />

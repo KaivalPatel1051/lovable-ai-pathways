@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 const MoodCheckIn = () => {
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
+  const { toast } = useToast();
 
   const moods = [
     { emoji: "😊", label: "Great", color: "bg-success" },
@@ -41,7 +43,17 @@ const MoodCheckIn = () => {
             <p className="text-sm text-muted-foreground">
               Thank you for sharing. Remember, every feeling is valid.
             </p>
-            <Button size="sm" className="transition-smooth">
+            <Button 
+              size="sm" 
+              className="transition-smooth"
+              onClick={() => {
+                toast({
+                  title: "Mood Logged! 💚",
+                  description: `Feeling ${selectedMood.toLowerCase()} today. Thank you for sharing.`,
+                });
+                setSelectedMood(null);
+              }}
+            >
               Log Mood
             </Button>
           </div>
