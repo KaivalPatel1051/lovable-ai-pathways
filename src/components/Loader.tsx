@@ -1,110 +1,76 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import BlurText from './BlurText';
 import './Loader.css';
 
 interface LoaderProps {
   onLoadingComplete: () => void;
 }
 
-const fonts = [
-  '"Montserrat", sans-serif',
-  '"Inter", sans-serif',
-  '"Poppins", sans-serif',
-  '"Roboto", sans-serif',
-  '"Open Sans", sans-serif',
-  '"Lato", sans-serif'
-];
-
-const motivationalQuotes = [
-  "Every moment is a fresh beginning.",
-  "Recovery is not a destination, it's a journey.",
-  "You are stronger than your struggles.",
-  "One day at a time, one step at a time.",
-  "Your future self is counting on you.",
-  "Progress, not perfection.",
-  "Healing happens here."
-];
-
 const Loader: React.FC<LoaderProps> = ({ onLoadingComplete }) => {
   const [percentage, setPercentage] = useState(0);
   const [fadeOut, setFadeOut] = useState(false);
-  const [showHeading, setShowHeading] = useState(false);
-  const [fontIndex, setFontIndex] = useState(0);
-  const [finalFont, setFinalFont] = useState(fonts[0]);
-  const [fontSwitching, setFontSwitching] = useState(false);
-  const [currentQuote, setCurrentQuote] = useState(0);
-  const [showQuote, setShowQuote] = useState(false);
-  const [loadingStage, setLoadingStage] = useState<'loading' | 'quote' | 'complete'>('loading');
+  const [showMainText, setShowMainText] = useState(false);
+  const [showProgress, setShowProgress] = useState(false);
+  const [showFinalAnimation, setShowFinalAnimation] = useState(false);
+  const [currentLoadingStep, setCurrentLoadingStep] = useState(0);
 
-  const radius = 40;
-  const circumference = 2 * Math.PI * radius;
+  const loadingSteps = [
+    "Initializing recovery platform...",
+    "Loading personalized content...",
+    "Connecting to support network...",
+    "Preparing your dashboard...",
+    "Almost ready..."
+  ];
 
-  // Enhanced loading sequence
+  // Professional loading sequence
   useEffect(() => {
-    document.fonts.ready.then(() => {
-      setFontSwitching(true);
-
+    // Show main text immediately
+    setShowMainText(true);
+    
+    // Start progress after text animation begins
+    setTimeout(() => {
+      setShowProgress(true);
+      
       const interval = setInterval(() => {
         setPercentage(prev => {
-          if (prev >= 100) {
+          const newPercentage = prev + 1.2;
+          
+          // Update loading step based on percentage
+          const stepIndex = Math.floor((newPercentage / 100) * loadingSteps.length);
+          if (stepIndex !== currentLoadingStep && stepIndex < loadingSteps.length) {
+            setCurrentLoadingStep(stepIndex);
+          }
+          
+          if (newPercentage >= 100) {
             clearInterval(interval);
-            setLoadingStage('quote');
-            setFontSwitching(false);
-            setFinalFont(fonts[fontIndex]);
-
-            // Show motivational quote
+            setCurrentLoadingStep(loadingSteps.length - 1);
+            
+            // Show final animation
             setTimeout(() => {
-              setShowQuote(true);
+              setShowFinalAnimation(true);
               
-              // Cycle through quotes
-              const quoteInterval = setInterval(() => {
-                setCurrentQuote(prev => (prev + 1) % motivationalQuotes.length);
-              }, 1500);
-
-              // After showing quotes, show final heading
+              // Complete loading
               setTimeout(() => {
-                clearInterval(quoteInterval);
-                setShowQuote(false);
-                setLoadingStage('complete');
-                
+                setFadeOut(true);
                 setTimeout(() => {
-                  setShowHeading(true);
-
-                  // Final fade out
-                  setTimeout(() => {
-                    setFadeOut(true);
-                    setTimeout(() => {
-                      onLoadingComplete();
-                    }, 800);
-                  }, 2500);
-                }, 500);
-              }, 6000);
-            }, 500);
-
+                  onLoadingComplete();
+                }, 1000);
+              }, 3000);
+            }, 800);
+            
             return 100;
           }
-          return prev + 1.5;
+          return newPercentage;
         });
-      }, 20);
-
-      return () => clearInterval(interval);
-    });
-  }, [onLoadingComplete, fontIndex]);
-
-  // Smooth font switching with fade effect
-  useEffect(() => {
-    if (fontSwitching) {
-      const fontInterval = setInterval(() => {
-        setFontIndex(prev => (prev + 1) % fonts.length);
-      }, 1200);
-      return () => clearInterval(fontInterval);
-    }
-  }, [fontSwitching]);
+      }, 40);
+    }, 1000);
+  }, [onLoadingComplete, currentLoadingStep, loadingSteps.length]);
 
   return (
-    <div className={`loader-wrapper ${fadeOut ? 'fade-out' : ''}`}>
-      {/* Animated Background Gradient */}
-      <div className="animated-bg">
+    <div className={`blur-text-loader ${fadeOut ? 'fade-out' : ''}`}>
+      {/* Animated Background */}
+      <div className="animated-background">
         <div className="gradient-orb orb-1"></div>
         <div className="gradient-orb orb-2"></div>
         <div className="gradient-orb orb-3"></div>
@@ -112,125 +78,113 @@ const Loader: React.FC<LoaderProps> = ({ onLoadingComplete }) => {
 
       <div className="loader-content">
         <AnimatePresence mode="wait">
-          {loadingStage === 'loading' && (
+          {!showFinalAnimation ? (
             <motion.div
               key="loading"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.6 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.8 }}
               className="loading-stage"
             >
-              <AnimatePresence mode="wait">
-                <motion.h1
-                  key={`font-${fontIndex}`}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.1 }}
-                  transition={{ duration: 0.5 }}
-                  className="main-title"
-                  style={{
-                    fontFamily: fonts[fontIndex],
+              {/* Main BlurText Animation */}
+              {showMainText && (
+                <BlurText
+                  text="NISCHAY"
+                  delay={150}
+                  animateBy="words"
+                  direction="bottom"
+                  className="main-blur-title"
+                  onAnimationComplete={() => {
+                    // Animation completed, continue with progress
                   }}
-                >
-                  ADDICTION FREE LIFE
-                </motion.h1>
-              </AnimatePresence>
+                  stepDuration={0.6}
+                />
+              )}
 
-              {/* Enhanced Circular Progress Loader */}
-              <div className="progress-container">
-                <div className="progress-wrapper">
-                  <svg className="progress-ring" width="120" height="120">
-                    <defs>
-                      <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#8b5cf6" />
-                        <stop offset="50%" stopColor="#06b6d4" />
-                        <stop offset="100%" stopColor="#10b981" />
-                      </linearGradient>
-                    </defs>
-                    <circle
-                      className="progress-ring__background"
-                      stroke="rgba(255,255,255,0.1)"
-                      fill="transparent"
-                      strokeWidth="8"
-                      r={radius + 10}
-                      cx="60"
-                      cy="60"
-                    />
-                    <motion.circle
-                      className="progress-ring__circle"
-                      stroke="url(#progressGradient)"
-                      fill="transparent"
-                      strokeWidth="8"
-                      strokeDasharray={circumference + 62.8}
-                      strokeDashoffset={
-                        (circumference + 62.8) - (percentage / 100) * (circumference + 62.8)
-                      }
-                      r={radius + 10}
-                      cx="60"
-                      cy="60"
-                      strokeLinecap="round"
-                      style={{ 
-                        transition: 'stroke-dashoffset 0.3s ease',
-                        filter: 'drop-shadow(0 0 10px rgba(139, 92, 246, 0.5))'
-                      }}
-                    />
-                  </svg>
-                  <div className="progress-content">
-                    <div className="progress-text">{percentage}%</div>
-                    <div className="progress-label">Loading</div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {loadingStage === 'quote' && showQuote && (
-            <motion.div
-              key="quote"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -30 }}
-              transition={{ duration: 0.8 }}
-              className="quote-stage"
-            >
-              <AnimatePresence mode="wait">
+              {/* Progress Section */}
+              {showProgress && (
                 <motion.div
-                  key={currentQuote}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.2 }}
-                  transition={{ duration: 0.6 }}
-                  className="quote-container"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.5 }}
+                  className="progress-section"
                 >
-                  <div className="quote-icon">✨</div>
-                  <p className="quote-text">{motivationalQuotes[currentQuote]}</p>
-                </motion.div>
-              </AnimatePresence>
-            </motion.div>
-          )}
+                  {/* Animated Progress Bar */}
+                  <div className="progress-bar-container">
+                    <div className="progress-bar">
+                      <motion.div
+                        className="progress-fill"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${percentage}%` }}
+                        transition={{ duration: 0.4, ease: 'easeOut' }}
+                      />
+                    </div>
+                    <div className="progress-info">
+                      <div className="progress-percentage">{Math.round(percentage)}%</div>
+                      <div className="progress-dots">
+                        {Array.from({ length: 3 }).map((_, i) => (
+                          <motion.div
+                            key={i}
+                            className="progress-dot"
+                            animate={{
+                              scale: [1, 1.2, 1],
+                              opacity: [0.5, 1, 0.5]
+                            }}
+                            transition={{
+                              duration: 1.5,
+                              repeat: Infinity,
+                              delay: i * 0.2
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
 
-          {loadingStage === 'complete' && showHeading && (
+                  <AnimatePresence mode="wait">
+                    <motion.p
+                      key={currentLoadingStep}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.5 }}
+                      className="loading-subtitle"
+                    >
+                      {loadingSteps[currentLoadingStep]}
+                    </motion.p>
+                  </AnimatePresence>
+                </motion.div>
+              )}
+            </motion.div>
+          ) : (
             <motion.div
-              key="complete"
-              initial={{ scale: 1, opacity: 1 }}
-              animate={{ scale: 2.5, opacity: 0 }}
-              transition={{ duration: 2.5, ease: 'easeInOut' }}
-              className="completion-stage"
+              key="final"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.2 }}
+              transition={{ duration: 2, ease: 'easeInOut' }}
+              className="final-stage"
             >
-              <h1
-                className="final-title"
-                style={{
-                  fontFamily: finalFont,
-                }}
-              >
-                ADDICTION FREE LIFE
-              </h1>
+              <BlurText
+                text="NISCHAY"
+                delay={100}
+                animateBy="letters"
+                direction="top"
+                className="final-blur-title"
+                stepDuration={0.8}
+                animationFrom={{ filter: 'blur(15px)', opacity: 0, scale: 0.8 }}
+                animationTo={[
+                  { filter: 'blur(8px)', opacity: 0.6, scale: 0.9 },
+                  { filter: 'blur(0px)', opacity: 1, scale: 1.1 }
+                ]}
+              />
+              
               <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: '100%' }}
-                transition={{ duration: 1.5, delay: 0.5 }}
-                className="title-underline"
+                initial={{ width: 0, opacity: 0 }}
+                animate={{ width: '100%', opacity: 1 }}
+                transition={{ duration: 2, delay: 1 }}
+                className="final-underline"
               />
             </motion.div>
           )}

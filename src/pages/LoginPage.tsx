@@ -1,4 +1,5 @@
 import React from 'react';
+import Particles from '@/components/Particles';
 import './LoginPage.css';
 
 interface LoginPageProps {
@@ -15,9 +16,21 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
 
   return (
     <>
+      {/* Particles Background for Login Page */}
+      <Particles
+        particleColors={['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b']}
+        particleCount={80}
+        particleSpread={6}
+        speed={0.2}
+        particleBaseSize={2}
+        moveParticlesOnHover={true}
+        alphaParticles={true}
+        disableRotation={false}
+      />
+      
       <div className="login-container">
         <div className="login-card">
-          <h1>FBIOPENUP</h1>
+          <h1>NISCHAY</h1>
           <form onSubmit={handleSubmit}>
             <div className="input-field">
               <input

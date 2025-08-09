@@ -1,26 +1,74 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import DashboardHeader from '../components/DashboardHeader';
 import MoodCheckIn from '../components/MoodCheckIn';
 import MotivationalCard from '../components/MotivationalCard';
 import QuickStats from '../components/QuickStats';
 import RecentAchievements from '../components/RecentAchievements';
 import PanicButton from '../components/PanicButton';
-import Navigation from '../components/Navigation';
 
 const DashboardPage: React.FC = () => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5
+      }
+    }
+  };
+
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <DashboardHeader />
 
-      <main style={{ padding: '1rem' }}>
-        <QuickStats />
-        <MoodCheckIn />
-        <MotivationalCard />
-        <RecentAchievements />
-        <PanicButton />
-      </main>
+      <motion.main 
+        className="container mx-auto px-4 py-6 pb-24 space-y-6 animate-gpu"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {/* Quick Stats Section */}
+        <motion.div variants={itemVariants} className="cursor-target">
+          <QuickStats />
+        </motion.div>
 
-      <Navigation />
+        {/* Primary Actions Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <motion.div variants={itemVariants} className="cursor-target">
+            <MoodCheckIn />
+          </motion.div>
+          
+          <motion.div variants={itemVariants} className="cursor-target">
+            <MotivationalCard />
+          </motion.div>
+        </div>
+
+        {/* Recent Achievements */}
+        <motion.div variants={itemVariants} className="cursor-target">
+          <RecentAchievements />
+        </motion.div>
+
+        {/* Emergency Support - Always Visible */}
+        <motion.div 
+          variants={itemVariants} 
+          className="sticky bottom-20 z-10 cursor-target"
+        >
+          <PanicButton />
+        </motion.div>
+      </motion.main>
     </div>
   );
 };

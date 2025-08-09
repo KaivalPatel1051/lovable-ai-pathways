@@ -5,6 +5,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import CountUp from '@/components/CountUp';
+import Counter from '@/components/Counter';
 import { 
   ArrowLeft, 
   Heart, 
@@ -448,18 +450,60 @@ const AchievementsPage = () => {
               <CardHeader>
                 <CardTitle>Community Stats</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-4 bg-muted rounded-lg">
-                    <Users className="h-8 w-8 mx-auto mb-2 text-primary" />
-                    <p className="text-2xl font-bold">1,247</p>
-                    <p className="text-sm text-muted-foreground">Community Members</p>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="text-center p-6 bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-lg border border-purple-500/20 cursor-target">
+                    <Users className="h-10 w-10 mx-auto mb-4 text-purple-400" />
+                    <div className="text-3xl font-bold text-white mb-2">
+                      <CountUp 
+                        to={1247} 
+                        duration={2.5} 
+                        delay={0.5}
+                        className="text-3xl font-bold text-white"
+                        separator=","
+                      />
+                    </div>
+                    <p className="text-sm text-gray-300">Community Members</p>
                   </div>
-                  <div className="text-center p-4 bg-muted rounded-lg">
-                    <Trophy className="h-8 w-8 mx-auto mb-2 text-primary" />
-                    <p className="text-2xl font-bold">3,891</p>
-                    <p className="text-sm text-muted-foreground">Milestones Achieved</p>
+                  <div className="text-center p-6 bg-gradient-to-br from-green-500/10 to-teal-500/10 rounded-lg border border-green-500/20 cursor-target">
+                    <Trophy className="h-10 w-10 mx-auto mb-4 text-green-400" />
+                    <div className="text-3xl font-bold text-white mb-2">
+                      <CountUp 
+                        to={3891} 
+                        duration={3} 
+                        delay={1}
+                        className="text-3xl font-bold text-white"
+                        separator=","
+                      />
+                    </div>
+                    <p className="text-sm text-gray-300">Milestones Achieved</p>
                   </div>
+                </div>
+                
+                {/* Rolling Counter Display */}
+                <div className="text-center p-6 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 rounded-lg border border-yellow-500/20 cursor-target">
+                  <Calendar className="h-10 w-10 mx-auto mb-4 text-yellow-400" />
+                  <div className="mb-2">
+                    <Counter 
+                      value={365}
+                      fontSize={48}
+                      places={[100, 10, 1]}
+                      textColor="#ffffff"
+                      fontWeight="bold"
+                      gap={4}
+                      borderRadius={8}
+                      horizontalPadding={16}
+                      containerStyle={{
+                        display: 'inline-block'
+                      }}
+                      counterStyle={{
+                        background: 'rgba(0, 0, 0, 0.6)',
+                        backdropFilter: 'blur(10px)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)'
+                      }}
+                    />
+                  </div>
+                  <p className="text-sm text-gray-300">Total Days of Recovery in Community</p>
                 </div>
               </CardContent>
             </Card>

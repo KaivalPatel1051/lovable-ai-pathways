@@ -1,11 +1,15 @@
-import { createRoot } from 'react-dom/client'
-
-import './index.css'
-// In src/main.tsx
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
-import './index.css'; // Correct import for global styles
-import './App.css';   // Another correct import for global styles
+
+// Global styles
+import './index.css';
+import './App.css';
+
+// Component-specific styles
+import './components/TargetCursor.css';
+import './components/TiltedCard.css';
+import './components/Dock.css';
+import './components/Counter.css';
 
 createRoot(document.getElementById("root")!).render(<App />);
