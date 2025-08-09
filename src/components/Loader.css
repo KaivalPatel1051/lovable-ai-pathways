@@ -1,57 +1,234 @@
+/* Enhanced Loader Styles */
 .loader-wrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #121212;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    overflow: hidden;
-    transition: opacity 1s ease-in-out;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+  z-index: 9999;
+  transition: opacity 0.8s ease-out;
+  overflow: hidden;
+}
+
+.loader-wrapper.fade-out {
+  opacity: 0;
+}
+
+/* Animated Background */
+.animated-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.gradient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+}
+
+.orb-1 {
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, transparent 70%);
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.orb-2 {
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.3) 0%, transparent 70%);
+  top: 60%;
+  right: 15%;
+  animation-delay: 2s;
+}
+
+.orb-3 {
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%);
+  bottom: 20%;
+  left: 50%;
+  animation-delay: 4s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  25% { transform: translateY(-20px) translateX(10px); }
+  50% { transform: translateY(10px) translateX(-15px); }
+  75% { transform: translateY(-5px) translateX(5px); }
+}
+
+/* Loader Content */
+.loader-content {
+  text-align: center;
+  color: white;
+  z-index: 1;
+  position: relative;
+}
+
+/* Loading Stage */
+.loading-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+}
+
+.main-title {
+  margin: 0;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+  background: linear-gradient(135deg, #8b5cf6, #06b6d4, #10b981);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 3s ease-in-out infinite;
+  text-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Progress Container */
+.progress-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.progress-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+  filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.4));
+}
+
+.progress-ring__circle {
+  transition: stroke-dashoffset 0.3s ease;
+  transform-origin: 50% 50%;
+}
+
+.progress-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.progress-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.25rem;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.progress-label {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Quote Stage */
+.quote-stage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.quote-container {
+  text-align: center;
+  max-width: 600px;
+  padding: 2rem;
+}
+
+.quote-icon {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.1) rotate(5deg); opacity: 0.8; }
+}
+
+.quote-text {
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 400;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  font-style: italic;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Completion Stage */
+.completion-stage {
+  text-align: center;
+}
+
+.final-title {
+  margin: 0;
+  font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: 800;
+  background: linear-gradient(135deg, #ffffff, #8b5cf6, #06b6d4);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: finalGlow 2s ease-in-out infinite;
+  text-shadow: 0 0 50px rgba(255, 255, 255, 0.3);
+  transform-origin: center;
+}
+
+@keyframes finalGlow {
+  0%, 100% { 
+    background-position: 0% 50%; 
+    filter: brightness(1);
+  }
+  50% { 
+    background-position: 100% 50%; 
+    filter: brightness(1.2);
+  }
+}
+
+.title-underline {
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #8b5cf6, #06b6d4, #10b981, transparent);
+  margin: 1rem auto 0;
+  border-radius: 2px;
+  max-width: 400px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .quote-container {
+    padding: 1.5rem;
+    max-width: 90%;
   }
   
-  .fade-out {
-    opacity: 0;
-    pointer-events: none;
-  }
-  
-  .loader-video {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    transform: translate(-50%, -50%);
-    object-fit: cover;
-    z-index: 1;
-    filter: brightness(0.4) contrast(1.2);
-  }
-  
-  .loader-text {
-    position: relative;
-    z-index: 2;
-    color: #fff;
-    text-align: center;
-    font-family: 'Montserrat', sans-serif;
-  }
-  
-  .loader-text h1 {
-    font-weight: 700;
-    font-size: 3rem;
-    margin-bottom: 30px;
-    letter-spacing: 3px;
-    text-shadow: 0 0 10px #3f51b5;
-  }
-  
-  /* Circular Progress Loader */
-  .progress-wrapper {
-    position: relative;
+  .progress-wrapper svg {
     width: 100px;
     height: 100px;
     display: flex;
@@ -74,11 +251,25 @@
     stroke-linecap: round;
   }
   
-  .progress-text {
-    position: absolute;
-    color: #fff;
-    font-size: 1.2rem;
-    font-weight: bold;
-    text-shadow: 0 0 5px rgba(63, 81, 181, 0.8);
+  .gradient-orb {
+    filter: blur(40px);
   }
   
+  .orb-1 { width: 200px; height: 200px; }
+  .orb-2 { width: 150px; height: 150px; }
+  .orb-3 { width: 120px; height: 120px; }
+}
+
+@media (max-width: 480px) {
+  .loading-stage {
+    gap: 2rem;
+  }
+  
+  .quote-text {
+    font-size: 1.125rem;
+  }
+  
+  .progress-text {
+    font-size: 1.25rem;
+  }
+}
