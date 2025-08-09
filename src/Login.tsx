@@ -1,45 +1,50 @@
+// src/Login.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Simple authentication check
-    if (email === "admin@example.com" && password === "password") {
-    //   localStorage.setItem("isLoggedIn", "true");
-    //   navigate("/"); // Redirect to dashboard
-    } else {
-      alert("Invalid email or password");
-    }
+    navigate("/dashboard"); // no validation for now
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px", width: "300px" }}>
-        <h2>Login</h2>
+    <div className="flex items-center justify-center h-screen bg-gradient-to-r from-purple-500 to-indigo-600">
+      <form
+        onSubmit={handleLogin}
+        className="bg-white shadow-xl rounded-xl p-8 w-96 space-y-6"
+      >
+        <h1 className="text-3xl font-bold text-center text-indigo-600">
+          Welcome Back
+        </h1>
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          required
+          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          required
+          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
-        <button type="submit">Login</button>
+        <button
+          type="submit"
+          className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition"
+        >
+          Log In
+        </button>
+        <p className="text-center text-gray-500 text-sm">
+          Forgot your password? <span className="text-indigo-600">Reset</span>
+        </p>
       </form>
     </div>
   );
-};
-
-export default Login;
+}
