@@ -13,6 +13,11 @@ import CommunityPage from '@/pages/CommunityPage';
 import SupabaseAdminDashboard from '@/components/SupabaseAdminDashboard';
 import AddictionIntakeForm from '@/components/AddictionIntakeForm';
 import SupabaseTest from '@/components/SupabaseTest';
+import SimpleLogin from '@/components/SimpleLogin';
+import SimpleChat from '@/components/SimpleChat';
+import SupabaseReelsPage from '@/pages/SupabaseReelsPage';
+import InstagramReelsPage from '@/pages/InstagramReelsPage';
+import InstagramChatPage from '@/pages/InstagramChatPage';
 import Loader from '@/components/Loader';
 import Dock, { DockItemData } from '@/components/Dock';
 import Particles from '@/components/Particles';
@@ -129,6 +134,7 @@ const AppContent: React.FC = () => {
           </ProtectedRoute>
         } />
         <Route path="/test-supabase" element={<SupabaseTest />} />
+        <Route path="/simple-login" element={<SimpleLogin />} />
         <Route path="/intake" element={
           <ProtectedRoute>
             <AddictionIntakeForm />
@@ -136,12 +142,12 @@ const AppContent: React.FC = () => {
         } />
         <Route path="/chat" element={
           <ProtectedRoute>
-            <SupabaseChatPage />
+            <InstagramChatPage />
           </ProtectedRoute>
         } />
         <Route path="/reels" element={
           <ProtectedRoute>
-            <EnhancedReelsPage />
+            <InstagramReelsPage />
           </ProtectedRoute>
         } />
         <Route path="/tracker" element={

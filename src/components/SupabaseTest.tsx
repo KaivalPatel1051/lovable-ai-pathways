@@ -117,6 +117,79 @@ const SupabaseTest: React.FC = () => {
     setLoading(false);
   };
 
+  const testEmailRegistration = async () => {
+    setLoading(true);
+    setResult('Testing Email Registration & Login...\n\n🔍 Creating test user...');
+    
+    try {
+      const timestamp = Date.now();
+      const randomId = Math.floor(Math.random() * 1000);
+      const testUser = {
+        email: `test.user.${timestamp}.${randomId}@gmail.com`,
+        password: 'TestPassword123!',
+        username: `testuser${timestamp}`,
+        firstName: 'Test',
+        lastName: 'User'
+      };
+
+      // Validate email format first
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const isValidEmail = emailRegex.test(testUser.email);
+      
+      setResult(prev => prev + `\n📧 Test Email: ${testUser.email}\n👤 Username: ${testUser.username}\n✅ Email Format Valid: ${isValidEmail ? 'Yes' : 'No'}\n\n🚀 Step 1: Registering user...`);
+
+      // Step 1: Register user
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email: testUser.email,
+        password: testUser.password,
+        options: {
+          data: {
+            username: testUser.username,
+            first_name: testUser.firstName,
+            last_name: testUser.lastName,
+          }
+        }
+      });
+
+      if (signUpError) {
+        setResult(prev => prev + `\n\n❌ REGISTRATION FAILED!\n📋 Error: ${signUpError.message}\n\n🔍 This might mean:\n- Email already exists\n- Password too weak\n- Supabase auth not configured properly`);
+        return;
+      }
+
+      setResult(prev => prev + `\n\n✅ REGISTRATION SUCCESSFUL!\n👤 User ID: ${signUpData.user?.id}\n📧 Email: ${signUpData.user?.email}\n🔐 Email Confirmed: ${signUpData.user?.email_confirmed_at ? 'Yes' : 'No'}\n\n🚀 Step 2: Checking if user appears in Supabase Auth...`);
+
+      // Step 2: Check if user exists in auth.users
+      const { data: { user }, error: getUserError } = await supabase.auth.getUser();
+      
+      if (getUserError) {
+        setResult(prev => prev + `\n\n❌ Error getting user: ${getUserError.message}`);
+      } else if (user) {
+        setResult(prev => prev + `\n\n✅ USER FOUND IN SUPABASE AUTH!\n👤 Auth User ID: ${user.id}\n📧 Auth Email: ${user.email}\n📅 Created: ${user.created_at}\n\n🚀 Step 3: Checking profiles table...`);
+        
+        // Step 3: Check if profile was created
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        if (profileError) {
+          setResult(prev => prev + `\n\n❌ PROFILE NOT FOUND!\n📋 Error: ${profileError.message}\n\n🔧 This might mean:\n- Database schema not set up\n- Profile trigger not working\n- RLS policies blocking access`);
+        } else {
+          setResult(prev => prev + `\n\n✅ PROFILE CREATED SUCCESSFULLY!\n👤 Profile ID: ${profile.id}\n🏷️ Username: ${profile.username}\n📛 Name: ${profile.first_name} ${profile.last_name}\n📧 Email: ${profile.email}\n📅 Created: ${profile.created_at}\n\n🎉 COMPLETE SUCCESS! User is visible in both:\n- Supabase Auth > Users\n- Database > profiles table`);
+        }
+      }
+
+      // Step 4: Clean up - sign out
+      await supabase.auth.signOut();
+      setResult(prev => prev + `\n\n🧹 Cleaned up: Signed out test user\n\n✅ TEST COMPLETE!`);
+
+    } catch (error: any) {
+      setResult(prev => prev + `\n\n❌ Unexpected Error: ${error.message}\n\n🔍 Full error:\n${JSON.stringify(error, null, 2)}`);
+    }
+    setLoading(false);
+  };
+
   const checkEnvironmentVars = () => {
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
     const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -183,6 +256,14 @@ const SupabaseTest: React.FC = () => {
           className="w-full bg-red-500 hover:bg-red-600 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded transition-colors"
         >
           🔍 Test Google OAuth
+        </button>
+        
+        <button
+          onClick={testEmailRegistration}
+          disabled={loading}
+          className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded transition-colors"
+        >
+          ✉️ Test Email Registration & Login
         </button>
       </div>
 

@@ -67,12 +67,15 @@ export const SupabaseAuthProvider: React.FC<SupabaseAuthProviderProps> = ({ chil
   useEffect(() => {
     const initializeAuth = async () => {
       try {
+        console.log('Initializing authentication...');
+        
         // Get initial session
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
           console.error('Error getting session:', error);
         } else {
+          console.log('Session retrieved:', session?.user?.email || 'No user');
           setSession(session);
           setUser(session?.user ?? null);
           
