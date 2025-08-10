@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import Particles from './Particles';
+// Beams component removed due to React Three Fiber compatibility issues
 
 const WorkingLogin: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -119,27 +119,18 @@ const WorkingLogin: React.FC = () => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', position: 'relative', backgroundColor: '#0a0a0a' }}>
-      {/* Particles Background */}
-      <Particles
-        particleColors={['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b']}
-        particleCount={80}
-        particleSpread={6}
-        speed={0.2}
-        particleBaseSize={2}
-        moveParticlesOnHover={true}
-        alphaParticles={true}
-        disableRotation={false}
-      />
+    <div className="login-with-beams" style={{ minHeight: '100vh', position: 'relative', backgroundColor: '#0a0a0a' }}>
+      {/* 3D Beams Background removed due to React Three Fiber compatibility issues */}
       
-      <div style={{
-        position: 'relative',
-        zIndex: 10,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '100vh',
-        padding: '20px'
+      <div className="login-form-container" style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '100%',
+        maxWidth: '400px',
+        padding: '20px',
+        zIndex: 2
       }}>
         <div style={{
           backgroundColor: 'rgba(26, 26, 26, 0.95)',

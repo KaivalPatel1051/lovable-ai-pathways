@@ -153,12 +153,41 @@ class SocketService {
     this.socket?.on('user_typing', callback);
   }
 
+  // Alias for typing updates to match MERNChatPage expectations
+  onTypingUpdate(callback: (data: { chatId: string; userId: string; isTyping: boolean; userName: string }) => void): void {
+    this.socket?.on('user_typing', (data: { chatId: string; userId: string; username: string; isTyping: boolean }) => {
+      callback({
+        chatId: data.chatId,
+        userId: data.userId,
+        isTyping: data.isTyping,
+        userName: data.username
+      });
+    });
+  }
+
   onNewMessage(callback: (data: { chatId: string; message: Message }) => void): void {
     this.socket?.on('new_message', callback);
   }
 
   onMessageReadReceipt(callback: (data: { chatId: string; messageId: string; readBy: User; readAt: Date }) => void): void {
     this.socket?.on('message_read_receipt', callback);
+  }
+
+  // Additional methods for MERNChatPage compatibility
+  onMessageReaction(callback: (data: { messageId: string; emoji: string; userId: string }) => void): void {
+    this.socket?.on('message_reaction', callback);
+  }
+
+  onMessageRead(callback: (data: { messageIds: string[]; userId: string }) => void): void {
+    this.socket?.on('messages_read', callback);
+  }
+
+  updateTypingStatus(chatId: string, isTyping: boolean): void {
+    if (isTyping) {
+      this.startTyping(chatId);
+    } else {
+      this.stopTyping(chatId);
+    }
   }
 
   onReelUpdate(callback: (data: { reelId: string; type: string; value: any; user: User }) => void): void {

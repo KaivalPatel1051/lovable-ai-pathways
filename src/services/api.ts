@@ -125,6 +125,9 @@ export const userAPI = {
 export const chatAPI = {
   getChats: () => api.get('/chat'),
 
+  getChatMessages: (chatId: string, page = 1, limit = 50) =>
+    api.get(`/chat/${chatId}/messages?page=${page}&limit=${limit}`),
+
   createDirectChat: (userId: string) =>
     api.post('/chat/direct', { userId }),
 
@@ -134,8 +137,9 @@ export const chatAPI = {
     mediaUrl?: string;
   }) => api.post(`/chat/${chatId}/messages`, messageData),
 
-  markAsRead: (chatId: string, messageIds: string[]) =>
-    api.put(`/chat/${chatId}/read`, { messageIds }),
+  markAsRead: async (messageIds: string[]) => {
+    return api.post('/chat/mark-read', { messageIds });
+  },
 
   updateTypingStatus: (chatId: string, isTyping: boolean) =>
     api.post(`/chat/${chatId}/typing`, { isTyping }),
@@ -144,27 +148,48 @@ export const chatAPI = {
     api.post(`/chat/messages/${messageId}/react`, { emoji }),
 };
 
+// Addiction Profile APIs
+export const addictionProfileAPI = {
+  createAddictionProfile: async (profileData: any) => {
+    return api.post('/addiction/profile', profileData);
+  },
+
+  getAddictionProfile: async () => {
+    return api.get('/addiction/profile');
+  },
+
+  updateAddictionProfile: async (profileData: any) => {
+    return api.put('/addiction/profile', profileData);
+  },
+
+  getAddictionInsights: async () => {
+    return api.get('/addiction/insights');
+  },
+};
+
 // Reels API calls
 export const reelsAPI = {
   getReels: (page = 1, limit = 10, trending = false) =>
     api.get(`/reels?page=${page}&limit=${limit}&trending=${trending}`),
 
-  getReelById: (reelId: string) => api.get(`/reels/${reelId}`),
+  getReel: (id: string) => api.get(`/reels/${id}`),
 
-  createReel: (reelData: FormData) =>
-    api.post('/reels', reelData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    }),
+  likeReel: (id: string) => api.post(`/reels/${id}/like`),
 
-  toggleLike: (reelId: string) => api.post(`/reels/${reelId}/like`),
-
-  toggleSave: (reelId: string) => api.post(`/reels/${reelId}/save`),
+  shareReel: (id: string) => api.post(`/reels/${id}/share`),
 
   addComment: (reelId: string, content: string) =>
     api.post(`/reels/${reelId}/comments`, { content }),
 
-  shareReel: (reelId: string, platform = 'internal') =>
-    api.post(`/reels/${reelId}/share`, { platform }),
+  getComments: (reelId: string, page = 1, limit = 20) =>
+    api.get(`/reels/${reelId}/comments?page=${page}&limit=${limit}`),
+
+  // Additional methods for EnhancedReelsPage compatibility
+  getReelComments: (reelId: string, page = 1, limit = 20) =>
+    api.get(`/reels/${reelId}/comments?page=${page}&limit=${limit}`),
+  
+  addReelComment: (reelId: string, content: string) =>
+    api.post(`/reels/${reelId}/comments`, { content }),
 
   recordView: (reelId: string, watchTime = 0) =>
     api.post(`/reels/${reelId}/view`, { watchTime }),
@@ -197,4 +222,15 @@ export const handleAPIError = (error: AxiosError) => {
   }
 };
 
-export default api;
+// Combined API service object
+const apiService = {
+  ...authAPI,
+  ...userAPI,
+  ...chatAPI,
+  ...addictionProfileAPI,
+  ...reelsAPI,
+  ...statsAPI
+};
+
+// Default export for the main API service
+export default apiService;

@@ -15,6 +15,8 @@ const userRoutes = require('./routes/users');
 const chatRoutes = require('./routes/chat');
 const reelsRoutes = require('./routes/reels');
 const statsRoutes = require('./routes/stats');
+const addictionRoutes = require('./routes/addiction');
+const adminRoutes = require('./routes/admin');
 
 // Import middleware
 const errorHandler = require('./middleware/errorHandler');
@@ -61,15 +63,21 @@ app.use(limiter);
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:8083",
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token']
+  origin: [
+    'http://localhost:8082',
+    'http://localhost:8085',
+    'http://localhost:8080',
+    'http://localhost:3000',
+    process.env.FRONTEND_URL
+  ].filter(Boolean),
+  credentials: true
 }));
 
-// Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Serve static files (for admin dashboard)
+app.use(express.static('public'));
 
 // Compression middleware
 app.use(compression());
@@ -107,6 +115,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/reels', reelsRoutes);
 app.use('/api/stats', statsRoutes);
+app.use('/api/addiction', addictionRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Socket.io connection handling
 socketHandler(io);

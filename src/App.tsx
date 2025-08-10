@@ -15,6 +15,10 @@ import Dock, { DockItemData } from './components/Dock';
 import Particles from './components/Particles';
 import TestBackend from './components/TestBackend';
 import WorkingLogin from './components/WorkingLogin';
+import MERNChatPage from './pages/MERNChatPage';
+import AddictionIntakeForm from './pages/AddictionIntakeForm';
+import FloatingAIButton from './components/FloatingAIButton';
+import EnhancedReelsPage from './pages/EnhancedReelsPage';
 
 // Protected Route Component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -90,11 +94,7 @@ const AppContent: React.FC = () => {
 
   // Show login page if not authenticated
   if (!loading && !isAuthenticated) {
-    return (
-      <div className="login-page-wrapper">
-        <LoginPage />
-      </div>
-    );
+    return <WorkingLogin />;
   }
 
   // Show main app if authenticated
@@ -122,7 +122,7 @@ const AppContent: React.FC = () => {
         } />
         <Route path="/chat" element={
           <ProtectedRoute>
-            <ChatPage />
+            <MERNChatPage />
           </ProtectedRoute>
         } />
         <Route path="/reels" element={
@@ -152,11 +152,19 @@ const AppContent: React.FC = () => {
         } />
         <Route path="/test-backend" element={<TestBackend />} />
         <Route path="/working-login" element={<WorkingLogin />} />
+        <Route path="/addiction-intake" element={
+          <ProtectedRoute>
+            <AddictionIntakeForm />
+          </ProtectedRoute>
+        } />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
       
       {/* Magnifying Dock Navigation - Always visible when authenticated */}
       {isAuthenticated && <DockWrapper />}
+      
+      {/* AI Chatbox - Only show for authenticated users */}
+      {isAuthenticated && <FloatingAIButton />}
     </div>
   );
 };

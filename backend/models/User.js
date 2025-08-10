@@ -49,6 +49,67 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+
+  // Addiction Recovery Profile
+  addictionProfile: {
+    addictionType: String,
+    intensity: {
+      type: Number,
+      min: 1,
+      max: 10
+    },
+    frequency: String,
+    peakUrgeTimes: [String],
+    triggers: [String],
+    duration: Number,
+    durationUnit: {
+      type: String,
+      enum: ['days', 'weeks', 'months', 'years']
+    },
+    previousAttempts: {
+      type: Boolean,
+      default: false
+    },
+    previousAttemptsCount: {
+      type: Number,
+      default: 0
+    },
+    longestSobriety: {
+      type: Number,
+      default: 0
+    },
+    sobrietyUnit: {
+      type: String,
+      enum: ['days', 'weeks', 'months', 'years'],
+      default: 'days'
+    },
+    motivations: [String],
+    supportSystem: String,
+    notes: String,
+    createdAt: {
+      type: Date,
+      default: Date.now
+    },
+    updatedAt: {
+      type: Date,
+      default: Date.now
+    }
+  },
+  
+  // Recovery Progress Tracking
+  hasCompletedIntake: {
+    type: Boolean,
+    default: false
+  },
+  sobrietyStartDate: Date,
+  currentStreak: {
+    type: Number,
+    default: 0
+  },
+  longestStreak: {
+    type: Number,
+    default: 0
+  },
   
   // Recovery Information
   sobrietyDate: {

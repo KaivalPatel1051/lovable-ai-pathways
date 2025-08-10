@@ -2,13 +2,14 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const Chat = require('../models/Chat');
 const User = require('../models/User');
+const { authMiddleware } = require('../middleware/auth');
 
 const router = express.Router();
 
 // @route   GET /api/chat
 // @desc    Get user's chats
 // @access  Private
-router.get('/', async (req, res) => {
+router.get('/', authMiddleware, async (req, res) => {
   try {
     const { page = 1, limit = 20 } = req.query;
     
