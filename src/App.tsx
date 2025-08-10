@@ -1,34 +1,36 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { MessageCircle, Video, BarChart3, BookOpen, Trophy, Users } from 'lucide-react';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import Loader from './components/Loader';
-import LoginPage from './pages/LoginPage';
-import DashboardPage from './components/DashboardPage';
-import ChatPage from './pages/ChatPage';
-import ReelsPage from './pages/ReelsPage';
-import TrackerPage from './pages/TrackerPage';
-import GuidancePage from './pages/GuidancePage';
-import AchievementsPage from './pages/AchievementsPage';
-import CommunityPage from './pages/CommunityPage';
-import Dock, { DockItemData } from './components/Dock';
-import Particles from './components/Particles';
-import TestBackend from './components/TestBackend';
-import WorkingLogin from './components/WorkingLogin';
-import MERNChatPage from './pages/MERNChatPage';
-import AddictionIntakeForm from './pages/AddictionIntakeForm';
-import FloatingAIButton from './components/FloatingAIButton';
-import EnhancedReelsPage from './pages/EnhancedReelsPage';
+import { SupabaseAuthProvider, useSupabaseAuth } from '@/contexts/SupabaseAuthContext';
+import SupabaseLoginPage from '@/pages/SupabaseLoginPage';
+import DashboardPage from '@/components/DashboardPage';
+import SupabaseChatPage from '@/pages/SupabaseChatPage';
+import EnhancedReelsPage from '@/pages/EnhancedReelsPage';
+import AchievementsPage from '@/pages/AchievementsPage';
+import TrackerPage from '@/pages/TrackerPage';
+import GuidancePage from '@/pages/GuidancePage';
+import CommunityPage from '@/pages/CommunityPage';
+import SupabaseAdminDashboard from '@/components/SupabaseAdminDashboard';
+import AddictionIntakeForm from '@/components/AddictionIntakeForm';
+import Loader from '@/components/Loader';
+import Dock, { DockItemData } from '@/components/Dock';
+import Particles from '@/components/Particles';
+import FloatingAIButton from '@/components/FloatingAIButton';
+import './App.css';
 
 // Protected Route Component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+  const { user, loading } = useSupabaseAuth();
   
   if (loading) {
-    return <Loader onLoadingComplete={() => {}} />;
+    return (
+      <div className="flex items-center justify-center h-screen bg-background">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
   }
   
-  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
+  return user ? <>{children}</> : <Navigate to="/login" replace />;
 };
 
 // Dock wrapper component to use navigation hooks
@@ -80,7 +82,7 @@ const DockWrapper: React.FC = () => {
 
 // Main App Content Component
 const AppContent: React.FC = () => {
-  const { isAuthenticated, loading } = useAuth();
+  const { user, loading } = useSupabaseAuth();
   const [showLoader, setShowLoader] = useState(true);
 
   const handleLoadingComplete = () => {
@@ -93,8 +95,8 @@ const AppContent: React.FC = () => {
   }
 
   // Show login page if not authenticated
-  if (!loading && !isAuthenticated) {
-    return <WorkingLogin />;
+  if (!loading && !user) {
+    return <SupabaseLoginPage />;
   }
 
   // Show main app if authenticated
@@ -122,12 +124,12 @@ const AppContent: React.FC = () => {
         } />
         <Route path="/chat" element={
           <ProtectedRoute>
-            <MERNChatPage />
+            <SupabaseChatPage />
           </ProtectedRoute>
         } />
         <Route path="/reels" element={
           <ProtectedRoute>
-            <ReelsPage />
+            <EnhancedReelsPage />
           </ProtectedRoute>
         } />
         <Route path="/tracker" element={
@@ -150,32 +152,35 @@ const AppContent: React.FC = () => {
             <CommunityPage />
           </ProtectedRoute>
         } />
-        <Route path="/test-backend" element={<TestBackend />} />
-        <Route path="/working-login" element={<WorkingLogin />} />
+        <Route path="/admin" element={
+          <ProtectedRoute>
+            <SupabaseAdminDashboard />
+          </ProtectedRoute>
+        } />
         <Route path="/addiction-intake" element={
           <ProtectedRoute>
-            <AddictionIntakeForm />
+            <AddictionIntakeForm onSubmit={() => {}} onClose={() => {}} />
           </ProtectedRoute>
         } />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
       
       {/* Magnifying Dock Navigation - Always visible when authenticated */}
-      {isAuthenticated && <DockWrapper />}
+      {user && <DockWrapper />}
       
       {/* AI Chatbox - Only show for authenticated users */}
-      {isAuthenticated && <FloatingAIButton />}
+      {user && <FloatingAIButton />}
     </div>
   );
 };
 
 const App: React.FC = () => {
   return (
-    <AuthProvider>
+    <SupabaseAuthProvider>
       <Router>
         <AppContent />
       </Router>
-    </AuthProvider>
+    </SupabaseAuthProvider>
   );
 };
 
