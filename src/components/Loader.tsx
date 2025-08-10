@@ -10,8 +10,7 @@ interface LoaderProps {
 const Loader: React.FC<LoaderProps> = ({ onLoadingComplete }) => {
   const [percentage, setPercentage] = useState(0);
   const [fadeOut, setFadeOut] = useState(false);
-  const [showMainText, setShowMainText] = useState(false);
-  const [showProgress, setShowProgress] = useState(false);
+  const [showAddictionFreeLife, setShowAddictionFreeLife] = useState(true);
   const [showFinalAnimation, setShowFinalAnimation] = useState(false);
   const [currentLoadingStep, setCurrentLoadingStep] = useState(0);
 
@@ -23,34 +22,27 @@ const Loader: React.FC<LoaderProps> = ({ onLoadingComplete }) => {
     "Almost ready..."
   ];
 
-  // Professional loading sequence
   useEffect(() => {
-    // Show main text immediately
-    setShowMainText(true);
-    
-    // Start progress after text animation begins
-    setTimeout(() => {
-      setShowProgress(true);
-      
+    setShowAddictionFreeLife(true);
+
+    const intervalId = setTimeout(() => {
       const interval = setInterval(() => {
         setPercentage(prev => {
           const newPercentage = prev + 1.2;
-          
-          // Update loading step based on percentage
+
           const stepIndex = Math.floor((newPercentage / 100) * loadingSteps.length);
           if (stepIndex !== currentLoadingStep && stepIndex < loadingSteps.length) {
             setCurrentLoadingStep(stepIndex);
           }
-          
+
           if (newPercentage >= 100) {
             clearInterval(interval);
             setCurrentLoadingStep(loadingSteps.length - 1);
-            
-            // Show final animation
+            setShowAddictionFreeLife(false); // Hide “ADDICTION FREE LIFE”
+
             setTimeout(() => {
-              setShowFinalAnimation(true);
-              
-              // Complete loading
+              setShowFinalAnimation(true); // Show “NISCHAY” animation
+
               setTimeout(() => {
                 setFadeOut(true);
                 setTimeout(() => {
@@ -58,18 +50,22 @@ const Loader: React.FC<LoaderProps> = ({ onLoadingComplete }) => {
                 }, 1000);
               }, 3000);
             }, 800);
-            
+
             return 100;
           }
           return newPercentage;
         });
       }, 40);
     }, 1000);
-  }, [onLoadingComplete, currentLoadingStep, loadingSteps.length]);
+
+    return () => {
+      clearTimeout(intervalId);
+    };
+  }, [currentLoadingStep, loadingSteps.length, onLoadingComplete]);
 
   return (
     <div className={`blur-text-loader ${fadeOut ? 'fade-out' : ''}`}>
-      {/* Animated Background */}
+      {/* Background animation divs */}
       <div className="animated-background">
         <div className="gradient-orb orb-1"></div>
         <div className="gradient-orb orb-2"></div>
@@ -87,74 +83,69 @@ const Loader: React.FC<LoaderProps> = ({ onLoadingComplete }) => {
               transition={{ duration: 0.8 }}
               className="loading-stage"
             >
-              {/* Main BlurText Animation */}
-              {showMainText && (
-                <BlurText
-                  text="NISCHAY"
-                  delay={150}
-                  animateBy="words"
-                  direction="bottom"
-                  className="main-blur-title"
-                  onAnimationComplete={() => {
-                    // Animation completed, continue with progress
-                  }}
-                  stepDuration={0.6}
-                />
-              )}
+              {showAddictionFreeLife && (
+                <>
+                  <BlurText
+                    text="ADDICTION FREE LIFE"
+                    delay={120}
+                    animateBy="words"
+                    direction="bottom"
+                    className="main-blur-title"
+                    stepDuration={0.5}
+                  />
 
-              {/* Progress Section */}
-              {showProgress && (
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.5 }}
-                  className="progress-section"
-                >
-                  {/* Animated Progress Bar */}
-                  <div className="progress-bar-container">
-                    <div className="progress-bar">
-                      <motion.div
-                        className="progress-fill"
-                        initial={{ width: 0 }}
-                        animate={{ width: `${percentage}%` }}
-                        transition={{ duration: 0.4, ease: 'easeOut' }}
-                      />
-                    </div>
-                    <div className="progress-info">
-                      <div className="progress-percentage">{Math.round(percentage)}%</div>
-                      <div className="progress-dots">
-                        {Array.from({ length: 3 }).map((_, i) => (
-                          <motion.div
-                            key={i}
-                            className="progress-dot"
-                            animate={{
-                              scale: [1, 1.2, 1],
-                              opacity: [0.5, 1, 0.5]
-                            }}
-                            transition={{
-                              duration: 1.5,
-                              repeat: Infinity,
-                              delay: i * 0.2
-                            }}
-                          />
-                        ))}
+                  {/* Progress Bar + Steps */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.5 }}
+                    className="progress-section"
+                  >
+                    <div className="progress-bar-container">
+                      <div className="progress-bar">
+                        <motion.div
+                          className="progress-fill"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${percentage}%` }}
+                          transition={{ duration: 0.4, ease: 'easeOut' }}
+                        />
+                      </div>
+                      <div className="progress-info">
+                        <div className="progress-percentage">{Math.round(percentage)}%</div>
+                        <div className="progress-dots">
+                          {Array.from({ length: 3 }).map((_, i) => (
+                            <motion.div
+                              key={i}
+                              className="progress-dot"
+                              animate={{
+                                scale: [1, 1.2, 1],
+                                opacity: [0.5, 1, 0.5]
+                              }}
+                              transition={{
+                                duration: 1.5,
+                                repeat: Infinity,
+                                delay: i * 0.2
+                              }}
+                            />
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <AnimatePresence mode="wait">
-                    <motion.p
-                      key={currentLoadingStep}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.5 }}
-                      className="loading-subtitle"
-                    >
-                      {loadingSteps[currentLoadingStep]}
-                    </motion.p>
-                  </AnimatePresence>
-                </motion.div>
+                    <AnimatePresence mode="wait">
+                      <motion.p
+                        key={currentLoadingStep}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.5 }}
+                        className="loading-subtitle"
+                      >
+                        {loadingSteps[currentLoadingStep]}
+                      </motion.p>
+                    </AnimatePresence>
+                  </motion.div>
+                </>
               )}
             </motion.div>
           ) : (
@@ -179,7 +170,6 @@ const Loader: React.FC<LoaderProps> = ({ onLoadingComplete }) => {
                   { filter: 'blur(0px)', opacity: 1, scale: 1.1 }
                 ]}
               />
-              
               <motion.div
                 initial={{ width: 0, opacity: 0 }}
                 animate={{ width: '100%', opacity: 1 }}

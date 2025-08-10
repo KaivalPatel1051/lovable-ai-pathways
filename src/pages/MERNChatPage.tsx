@@ -361,6 +361,8 @@ const MERNChatPage = () => {
               <TabsTrigger value="chats" className="cursor-target">Chats</TabsTrigger>
               <TabsTrigger value="contacts" className="cursor-target">Contacts</TabsTrigger>
             </TabsList>
+          </Tabs>
+        </div>
 
         {/* Error Message */}
         {error && (
@@ -381,67 +383,70 @@ const MERNChatPage = () => {
         <ScrollArea className="flex-1">
           <TabsContent value="chats" className="mt-0">
             <div className="space-y-1 p-2">
-              {chats.map((chat) => (
-                <motion.div
-                  key={chat._id}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Card 
-                    className={`p-3 cursor-pointer transition-colors cursor-target ${
-                      selectedChat?._id === chat._id 
-                        ? 'bg-primary/10 border-primary/20' 
-                        : 'hover:bg-muted/50'
-                    }`}
-                    onClick={() => selectChat(chat)}
+              {chats.map((chat) => {
+                const otherParticipant = chat.participants.find(p => p._id !== user?._id);
+                return (
+                  <motion.div
+                    key={chat._id}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    <div className="flex items-center space-x-3">
-                      <div className="relative">
-                        <Avatar className="h-10 w-10">
-                          <AvatarImage 
-                            src={chat.participants.find(p => p._id !== user?._id)?.profilePicture} 
-                            alt="Avatar" 
-                          />
-                          <AvatarFallback>
-                            {chat.isGroupChat 
-                              ? chat.name?.charAt(0).toUpperCase() || 'G'
-                              : chat.participants.find(p => p._id !== user?._id)?.firstName?.charAt(0).toUpperCase() || 'U'
-                            }
-                          </AvatarFallback>
-                        </Avatar>
-                        {chat.participants.find(p => p._id !== user?._id)?.isOnline && (
-                          <div className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 rounded-full border-2 border-background"></div>
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between">
-                          <p className="text-sm font-medium truncate">
-                            {chat.isGroupChat 
-                              ? chat.name
-                              : `${chat.participants.find(p => p._id !== user?._id)?.firstName} ${chat.participants.find(p => p._id !== user?._id)?.lastName}`
-                            }
-                          </p>
-                          {chat.lastMessage && (
-                            <p className="text-xs text-muted-foreground">
-                              {formatDistanceToNow(new Date(chat.lastMessage.createdAt), { addSuffix: true })}
+                    <Card 
+                      className={`p-3 cursor-pointer transition-colors cursor-target ${
+                        selectedChat?._id === chat._id 
+                          ? 'bg-primary/10 border-primary/20' 
+                          : 'hover:bg-muted/50'
+                      }`}
+                      onClick={() => selectChat(chat)}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className="relative">
+                          <Avatar className="h-10 w-10">
+                            <AvatarImage 
+                              src={chat.isGroupChat ? chat.name : otherParticipant?.profilePicture} 
+                              alt="Avatar" 
+                            />
+                            <AvatarFallback>
+                              {chat.isGroupChat 
+                                ? chat.name?.charAt(0).toUpperCase() || 'G'
+                                : otherParticipant?.firstName?.charAt(0).toUpperCase() || 'U'
+                              }
+                            </AvatarFallback>
+                          </Avatar>
+                          {otherParticipant?.isOnline && (
+                            <div className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 rounded-full border-2 border-background"></div>
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <p className="text-sm font-medium truncate">
+                              {chat.isGroupChat 
+                                ? chat.name
+                                : `${otherParticipant?.firstName} ${otherParticipant?.lastName}`
+                              }
                             </p>
-                          )}
-                        </div>
-                        <div className="flex items-center justify-between mt-1">
-                          <p className="text-xs text-muted-foreground truncate">
-                            {chat.lastMessage?.content || 'No messages yet'}
-                          </p>
-                          {chat.unreadCount > 0 && (
-                            <Badge variant="destructive" className="text-xs px-1.5 py-0.5 h-5">
-                              {chat.unreadCount}
-                            </Badge>
-                          )}
+                            {chat.lastMessage && (
+                              <p className="text-xs text-muted-foreground">
+                                {formatDistanceToNow(new Date(chat.lastMessage.createdAt), { addSuffix: true })}
+                              </p>
+                            )}
+                          </div>
+                          <div className="flex items-center justify-between mt-1">
+                            <p className="text-xs text-muted-foreground truncate">
+                              {chat.lastMessage?.content || 'No messages yet'}
+                            </p>
+                            {chat.unreadCount > 0 && (
+                              <Badge variant="destructive" className="text-xs px-1.5 py-0.5 h-5">
+                                {chat.unreadCount}
+                              </Badge>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </Card>
-                </motion.div>
-              ))}
+                    </Card>
+                  </motion.div>
+                );
+              })}
             </div>
           </TabsContent>
 
@@ -452,7 +457,6 @@ const MERNChatPage = () => {
             </div>
           </TabsContent>
         </ScrollArea>
-          </Tabs>
       </div>
 
       {/* Main Chat Area */}
@@ -465,13 +469,13 @@ const MERNChatPage = () => {
                 <div className="flex items-center gap-3">
                   <Avatar className="h-10 w-10">
                     <AvatarImage 
-                      src={selectedChat.isGroupChat ? '/api/placeholder/40/40' : selectedChat.participants[0]?.profilePicture} 
+                      src={selectedChat.isGroupChat ? '/api/placeholder/40/40' : selectedChat.participants.find(p => p._id !== user?._id)?.profilePicture} 
                     />
                     <AvatarFallback className="bg-primary text-primary-foreground">
                       {selectedChat.isGroupChat ? (
                         <Users className="h-5 w-5" />
                       ) : (
-                        selectedChat.participants[0]?.firstName?.[0] || 'U'
+                        selectedChat.participants.find(p => p._id !== user?._id)?.firstName?.[0] || 'U'
                       )}
                     </AvatarFallback>
                   </Avatar>
@@ -480,13 +484,13 @@ const MERNChatPage = () => {
                     <h2 className="font-semibold">
                       {selectedChat.isGroupChat 
                         ? selectedChat.name || 'Group Chat'
-                        : `${selectedChat.participants[0]?.firstName} ${selectedChat.participants[0]?.lastName}`
+                        : `${selectedChat.participants.find(p => p._id !== user?._id)?.firstName} ${selectedChat.participants.find(p => p._id !== user?._id)?.lastName}`
                       }
                     </h2>
                     <p className="text-sm text-muted-foreground">
                       {selectedChat.isGroupChat 
                         ? `${selectedChat.participants.length} participants`
-                        : selectedChat.participants[0]?.isOnline ? 'Online' : 'Offline'
+                        : selectedChat.participants.find(p => p._id !== user?._id)?.isOnline ? 'Online' : 'Offline'
                       }
                     </p>
                   </div>
@@ -641,7 +645,6 @@ const MERNChatPage = () => {
           </div>
         )}
       </div>
-    </div>
     </div>
   );
 };

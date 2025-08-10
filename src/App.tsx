@@ -12,6 +12,7 @@ import GuidancePage from '@/pages/GuidancePage';
 import CommunityPage from '@/pages/CommunityPage';
 import SupabaseAdminDashboard from '@/components/SupabaseAdminDashboard';
 import AddictionIntakeForm from '@/components/AddictionIntakeForm';
+import SupabaseTest from '@/components/SupabaseTest';
 import Loader from '@/components/Loader';
 import Dock, { DockItemData } from '@/components/Dock';
 import Particles from '@/components/Particles';
@@ -120,6 +121,17 @@ const AppContent: React.FC = () => {
         <Route path="/dashboard" element={
           <ProtectedRoute>
             <DashboardPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin" element={
+          <ProtectedRoute>
+            <SupabaseAdminDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/test-supabase" element={<SupabaseTest />} />
+        <Route path="/intake" element={
+          <ProtectedRoute>
+            <AddictionIntakeForm />
           </ProtectedRoute>
         } />
         <Route path="/chat" element={

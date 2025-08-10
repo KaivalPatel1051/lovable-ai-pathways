@@ -31,8 +31,8 @@ const MotivationalCard = () => {
   };
 
   return (
-    <Card className="bg-gradient-healing shadow-gentle">
-      <CardContent className="p-6 text-white">
+    <Card className="bg-black shadow-gentle">
+      <CardContent className="p-6 text-black">
         <div className="flex items-start gap-3">
           <Quote className="h-6 w-6 mt-1 opacity-80" />
           <div className="flex-1 space-y-3">

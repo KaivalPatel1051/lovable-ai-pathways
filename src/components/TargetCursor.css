@@ -1,10 +1,9 @@
-/* src/components/TargetCursor.css */
 .target-cursor-wrapper {
   position: fixed;
   top: 0;
   left: 0;
-  width: 50px;
-  height: 50px;
+  width: 30px;  /* smaller width */
+  height: 30px; /* smaller height */
   pointer-events: none;
   z-index: 9999;
   mix-blend-mode: difference;
@@ -14,8 +13,8 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 8px;
-  height: 8px;
+  width: 5px;   /* smaller dot */
+  height: 5px;
   background: #fff;
   border-radius: 50%;
   transform: translate(-50%, -50%);
@@ -24,36 +23,36 @@
 
 .target-cursor-corner {
   position: absolute;
-  width: 12px;
-  height: 12px;
-  border: 3px solid #fff;
+  width: 8px;   /* smaller corner boxes */
+  height: 8px;
+  border: 2px solid #fff;
   transition: transform 0.3s ease;
 }
 
 .corner-tl {
-  top: -18px;
-  left: -18px;
+  top: -12px;  /* adjusted position */
+  left: -12px;
   border-right: none;
   border-bottom: none;
 }
 
 .corner-tr {
-  top: -18px;
-  right: -18px;
+  top: -12px;
+  right: -12px;
   border-left: none;
   border-bottom: none;
 }
 
 .corner-br {
-  bottom: -18px;
-  right: -18px;
+  bottom: -12px;
+  right: -12px;
   border-left: none;
   border-top: none;
 }
 
 .corner-bl {
-  bottom: -18px;
-  left: -18px;
+  bottom: -12px;
+  left: -12px;
   border-right: none;
   border-top: none;
 }
