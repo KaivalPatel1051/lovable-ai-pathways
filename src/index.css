@@ -2,147 +2,110 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Lovable Recovery Platform Design System
-   Vibrant, healing-focused color palette with uplifting gradients
-   All colors MUST be HSL for consistency
+/* Serene Focus Recovery Platform Design System
+   Calm, minimalist, and sophisticated dark theme inspired by Awwwards
+   Designed for clarity, focus, and emotional well-being
 */
 
 @layer base {
   :root {
-    /* Base colors - soft, healing tones */
-    --background: 315 20% 97%;
-    --foreground: 240 15% 15%;
+    /* Base colors - serene navy theme */
+    --background: 220 10% 10%;
+    --foreground: 220 10% 95%;
 
-    /* Card system - gentle elevation */
-    --card: 0 0% 100%;
-    --card-foreground: 240 15% 15%;
+    /* Card system - elevated surfaces */
+    --card: 220 10% 15%;
+    --card-foreground: 220 10% 90%;
 
     /* Interactive elements */
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 15% 15%;
+    --popover: 220 10% 15%;
+    --popover-foreground: 220 10% 90%;
 
-    /* Primary - healing purple */
-    --primary: 270 60% 65%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 270 50% 75%;
+    /* Primary - calming cyan-blue */
+    --primary: 190 80% 60%;
+    --primary-foreground: 220 10% 10%;
 
-    /* Secondary - calming blue */
-    --secondary: 200 70% 70%;
-    --secondary-foreground: 0 0% 100%;
+    /* Secondary - muted lavender */
+    --secondary: 250 50% 70%;
+    --secondary-foreground: 220 10% 10%;
 
     /* Muted tones */
-    --muted: 315 15% 95%;
-    --muted-foreground: 240 8% 45%;
+    --muted: 220 10% 25%;
+    --muted-foreground: 220 10% 65%;
 
-    /* Accent - energetic coral */
-    --accent: 15 85% 70%;
-    --accent-foreground: 0 0% 100%;
+    /* Accent - soft teal */
+    --accent: 170 60% 55%;
+    --accent-foreground: 220 10% 10%;
 
-    /* Success - calming green */
-    --success: 150 60% 55%;
-    --success-foreground: 0 0% 100%;
+    /* Success - gentle green */
+    --success: 140 70% 50%;
+    --success-foreground: 220 10% 10%;
 
-    /* Warning - warm orange */
-    --warning: 35 85% 65%;
-    --warning-foreground: 0 0% 100%;
+    /* Warning - warm amber */
+    --warning: 45 90% 60%;
+    --warning-foreground: 220 10% 10%;
 
-    /* Destructive - soft red */
-    --destructive: 0 70% 65%;
-    --destructive-foreground: 0 0% 100%;
+    /* Destructive - clear but not jarring red */
+    --destructive: 350 70% 60%;
+    --destructive-foreground: 220 10% 95%;
 
     /* Borders and inputs */
-    --border: 315 20% 88%;
-    --input: 315 20% 88%;
-    --ring: 270 60% 65%;
+    --border: 220 10% 20%;
+    --input: 220 10% 18%;
+    --ring: 190 80% 60%;
 
-    /* Gradients for backgrounds */
-    --gradient-healing: linear-gradient(135deg, hsl(270 60% 75%), hsl(200 70% 80%));
-    --gradient-energy: linear-gradient(135deg, hsl(15 85% 75%), hsl(35 85% 75%));
-    --gradient-calm: linear-gradient(135deg, hsl(150 50% 70%), hsl(180 60% 75%));
-    --gradient-hero: linear-gradient(135deg, hsl(270 60% 65%), hsl(15 85% 70%));
+    /* Serene gradients for subtle depth */
+    --gradient-healing: linear-gradient(135deg, hsl(190 80% 60%), hsl(250 50% 70%));
+    --gradient-energy: linear-gradient(135deg, hsl(140 70% 50%), hsl(170 60% 55%));
+    --gradient-calm: linear-gradient(135deg, hsl(250 50% 70%), hsl(270 40% 60%));
+    --gradient-hero: linear-gradient(135deg, hsl(190 80% 60%), hsl(220 10% 15%));
     
-    /* Shadows for depth */
-    --shadow-gentle: 0 2px 8px hsl(270 60% 65% / 0.1);
-    --shadow-elevated: 0 8px 24px hsl(270 60% 65% / 0.15);
-    --shadow-floating: 0 12px 32px hsl(270 60% 65% / 0.2);
+    /* Subtle shadows for depth */
+    --shadow-gentle: 0 2px 8px hsl(220 10% 5% / 0.3);
+    --shadow-elevated: 0 8px 24px hsl(220 10% 5% / 0.4);
+    --shadow-floating: 0 12px 32px hsl(220 10% 5% / 0.5);
+    --shadow-focus: 0 0 0 2px hsl(190 80% 60% / 0.3);
 
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-gentle: all 0.2s ease-out;
 
-    --radius: 1rem;
+    --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
+    --sidebar-background: 0 0% 10%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-foreground: 0 0% 90%;
 
-    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary: 180 100% 50%;
 
-    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-primary-foreground: 0 0% 8%;
 
-    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent: 0 0% 15%;
 
-    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-accent-foreground: 0 0% 90%;
 
-    --sidebar-border: 220 13% 91%;
+    --sidebar-border: 0 0% 20%;
 
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 180 100% 50%;
   }
 
-  .dark {
-    /* Dark mode - gentle, soothing tones */
-    --background: 240 15% 8%;
-    --foreground: 315 20% 95%;
-
-    --card: 240 15% 12%;
-    --card-foreground: 315 20% 95%;
-
-    --popover: 240 15% 12%;
-    --popover-foreground: 315 20% 95%;
-
-    --primary: 270 50% 70%;
-    --primary-foreground: 240 15% 8%;
-    --primary-glow: 270 40% 60%;
-
-    --secondary: 200 60% 60%;
-    --secondary-foreground: 240 15% 8%;
-
-    --muted: 240 10% 18%;
-    --muted-foreground: 315 10% 65%;
-
-    --accent: 15 75% 65%;
-    --accent-foreground: 240 15% 8%;
-
-    --success: 150 50% 50%;
-    --success-foreground: 240 15% 8%;
-
-    --warning: 35 75% 60%;
-    --warning-foreground: 240 15% 8%;
-
-    --destructive: 0 60% 60%;
-    --destructive-foreground: 240 15% 8%;
-
-    --border: 240 10% 20%;
-    --input: 240 10% 20%;
-    --ring: 270 50% 70%;
-
-    /* Dark mode gradients */
-    --gradient-healing: linear-gradient(135deg, hsl(270 50% 25%), hsl(200 60% 30%));
-    --gradient-energy: linear-gradient(135deg, hsl(15 75% 35%), hsl(35 75% 40%));
-    --gradient-calm: linear-gradient(135deg, hsl(150 40% 25%), hsl(180 50% 30%));
-    --gradient-hero: linear-gradient(135deg, hsl(270 50% 35%), hsl(15 75% 40%));
-    
-    --shadow-gentle: 0 2px 8px hsl(240 15% 5% / 0.3);
-    --shadow-elevated: 0 8px 24px hsl(240 15% 5% / 0.4);
-    --shadow-floating: 0 12px 32px hsl(240 15% 5% / 0.5);
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+  /* Serene focus effects - subtle and calming */
+  .serene-glow {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.2), 0 4px 12px hsl(220 10% 5% / 0.3);
+  }
+  
+  .serene-text {
+    color: hsl(var(--primary));
+  }
+  
+  .serene-border {
+    border: 1px solid hsl(var(--border));
+    transition: border-color 0.2s ease;
+  }
+  
+  .serene-border:focus-within {
+    border-color: hsl(var(--primary));
+    box-shadow: var(--shadow-focus);
   }
 }
 
@@ -152,7 +115,8 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Montserrat', sans-serif;
   }
 
   /* Custom utility classes */
@@ -192,31 +156,77 @@
     transition: var(--transition-gentle);
   }
 
-  /* Animation keyframes */
-  @keyframes gentle-pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.8; }
+  /* Serene Focus Loader Animation */
+  @keyframes serene-loader {
+    0% {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.02);
+    }
+    100% {
+      opacity: 0.9;
+      transform: scale(1);
+    }
   }
   
-  @keyframes healing-glow {
-    0%, 100% { box-shadow: 0 0 20px hsl(var(--primary) / 0.3); }
-    50% { box-shadow: 0 0 30px hsl(var(--primary) / 0.5); }
+  @keyframes serene-pulse {
+    0%, 100% { 
+      box-shadow: 0 0 20px hsl(var(--primary) / 0.2); 
+    }
+    50% { 
+      box-shadow: 0 0 30px hsl(var(--primary) / 0.4); 
+    }
   }
   
-  @keyframes float-gentle {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-6px); }
+  @keyframes serene-progress {
+    0% { 
+      width: 0%; 
+    }
+    100% { 
+      width: 100%; 
+    }
   }
 
-  .animate-gentle-pulse {
-    animation: gentle-pulse 3s ease-in-out infinite;
+  .animate-serene-loader {
+    animation: serene-loader 2s ease-in-out infinite;
   }
   
-  .animate-healing-glow {
-    animation: healing-glow 4s ease-in-out infinite;
+  .animate-serene-pulse {
+    animation: serene-pulse 3s ease-in-out infinite;
   }
   
-  .animate-float-gentle {
-    animation: float-gentle 6s ease-in-out infinite;
+  .animate-serene-progress {
+    animation: serene-progress 3s ease-out;
+  }
+  
+  /* Serene Focus body styling */
+  body {
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+  
+  /* Minimalist scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary) / 0.6);
+    border-radius: 3px;
+    transition: background 0.2s ease;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.8);
   }
 }

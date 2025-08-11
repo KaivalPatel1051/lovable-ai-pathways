@@ -101,34 +101,15 @@ const Loader: React.FC<LoaderProps> = ({ onLoadingComplete }) => {
                     transition={{ duration: 0.8, delay: 0.5 }}
                     className="progress-section"
                   >
-                    <div className="progress-bar-container">
-                      <div className="progress-bar">
+                    <div className="progress-section">
+                      {/* Elegant single progress line */}
+                      <div className="w-full h-0.5 bg-muted rounded-full overflow-hidden">
                         <motion.div
-                          className="progress-fill"
+                          className="h-full bg-primary rounded-full animate-serene-progress"
                           initial={{ width: 0 }}
                           animate={{ width: `${percentage}%` }}
-                          transition={{ duration: 0.4, ease: 'easeOut' }}
+                          transition={{ duration: 0.6, ease: 'easeOut' }}
                         />
-                      </div>
-                      <div className="progress-info">
-                        <div className="progress-percentage">{Math.round(percentage)}%</div>
-                        <div className="progress-dots">
-                          {Array.from({ length: 3 }).map((_, i) => (
-                            <motion.div
-                              key={i}
-                              className="progress-dot"
-                              animate={{
-                                scale: [1, 1.2, 1],
-                                opacity: [0.5, 1, 0.5]
-                              }}
-                              transition={{
-                                duration: 1.5,
-                                repeat: Infinity,
-                                delay: i * 0.2
-                              }}
-                            />
-                          ))}
-                        </div>
                       </div>
                     </div>
 
@@ -162,19 +143,19 @@ const Loader: React.FC<LoaderProps> = ({ onLoadingComplete }) => {
                 delay={100}
                 animateBy="letters"
                 direction="top"
-                className="final-blur-title"
+                className="final-blur-title serene-text"
                 stepDuration={0.8}
-                animationFrom={{ filter: 'blur(15px)', opacity: 0, scale: 0.8 }}
+                animationFrom={{ filter: 'blur(10px)', opacity: 0, scale: 0.95 }}
                 animationTo={[
-                  { filter: 'blur(8px)', opacity: 0.6, scale: 0.9 },
-                  { filter: 'blur(0px)', opacity: 1, scale: 1.1 }
+                  { filter: 'blur(5px)', opacity: 0.7, scale: 0.98 },
+                  { filter: 'blur(0px)', opacity: 1, scale: 1.02 }
                 ]}
               />
               <motion.div
                 initial={{ width: 0, opacity: 0 }}
-                animate={{ width: '100%', opacity: 1 }}
-                transition={{ duration: 2, delay: 1 }}
-                className="final-underline"
+                animate={{ width: '60%', opacity: 0.8 }}
+                transition={{ duration: 1.5, delay: 1 }}
+                className="h-0.5 bg-primary rounded-full mx-auto mt-4"
               />
             </motion.div>
           )}

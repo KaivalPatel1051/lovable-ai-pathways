@@ -31,11 +31,11 @@ const DashboardPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-background">
       <DashboardHeader />
 
       <motion.main 
-        className="container mx-auto px-4 py-6 pb-24 space-y-6 animate-gpu"
+        className="container mx-auto px-6 py-8 pb-24 space-y-8 max-w-7xl"
         variants={containerVariants}
         initial="hidden"
         animate="visible"

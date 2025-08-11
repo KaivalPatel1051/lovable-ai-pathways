@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useSupabaseAuth } from '../contexts/SupabaseAuthContext';
+import NischayLoader from '../components/NischayLoader';
 
 interface Friend {
   id: string;
@@ -523,37 +524,34 @@ const InstagramChatPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg">Loading Chats...</p>
-        </div>
+      <div className="flex items-center justify-center h-screen bg-background">
+        <NischayLoader size="lg" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white flex">
-      {/* Sidebar - Friends List */}
-      <div className={`${selectedChat ? 'hidden md:block' : 'block'} w-full md:w-80 border-r border-gray-200 flex flex-col`}>
+    <div className="flex h-screen bg-background">
+      {/* Friends List Sidebar */}
+      <div className={`${selectedChat ? 'hidden md:block' : 'block'} w-full md:w-80 border-r border-border bg-card neon-border`}>
         {/* Header */}
-        <div className="p-4 border-b border-gray-200">
+        <div className="p-4 border-b border-border">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-xl font-bold">Messages</h1>
-            <button className="p-2 hover:bg-gray-100 rounded-full">
-              <Plus size={20} />
+            <h1 className="text-xl font-bold text-foreground neon-text">Messages</h1>
+            <button className="p-2 hover:bg-muted rounded-full neon-glow transition-all">
+              <Plus size={20} className="text-primary" />
             </button>
           </div>
           
           {/* Search */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+            <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
             <input
               type="text"
-              placeholder="Search messages..."
+              placeholder="Search friends..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-full text-sm focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-10 pr-4 py-2 bg-input border border-border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary neon-border text-foreground"
             />
           </div>
         </div>
@@ -561,10 +559,11 @@ const InstagramChatPage: React.FC = () => {
         {/* Friends List */}
         <div className="flex-1 overflow-y-auto">
           {filteredFriends.map((friend) => (
-            <button
+            <motion.div
               key={friend.id}
+              whileHover={{ backgroundColor: 'hsl(var(--muted))' }}
               onClick={() => openChat(friend)}
-              className="w-full p-4 flex items-center space-x-3 hover:bg-gray-50 transition-colors"
+              className="flex items-center p-4 cursor-pointer hover:bg-muted transition-colors border-b border-border/50"
             >
               <div className="relative">
                 <img
@@ -577,25 +576,25 @@ const InstagramChatPage: React.FC = () => {
                 )}
               </div>
               
-              <div className="flex-1 text-left">
+              <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
-                  <p className="font-semibold text-sm">{friend.first_name} {friend.last_name}</p>
-                  {friend.latest_message && (
-                    <span className="text-xs text-gray-500">
-                      {formatLastSeen(friend.latest_message.created_at)}
-                    </span>
-                  )}
+                  <h3 className="font-semibold text-foreground truncate">
+                    {friend.first_name} {friend.last_name}
+                  </h3>
+                  <span className="text-xs text-muted-foreground">
+                    {friend.latest_message ? formatTime(friend.latest_message.created_at) : ''}
+                  </span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-gray-600 truncate">
-                    {friend.latest_message?.content || 'No messages yet'}
+                <div className="flex items-center justify-between mt-1">
+                  <p className="text-sm text-muted-foreground truncate">
+                    @{friend.username}
                   </p>
-                  {friend.latest_message && !friend.latest_message.is_read && friend.latest_message.sender_id !== user?.id && (
-                    <div className="w-2 h-2 bg-blue-500 rounded-full ml-2"></div>
-                  )}
+                  <div className={`w-2 h-2 rounded-full ${
+                    friend.is_online ? 'bg-success shadow-[0_0_10px_hsl(var(--success))]' : 'bg-muted-foreground'
+                  }`} />
                 </div>
               </div>
-            </button>
+            </motion.div>
           ))}
         </div>
       </div>

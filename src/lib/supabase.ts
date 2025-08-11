@@ -6,10 +6,11 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
 // Validate environment variables
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase environment variables:', {
+  console.warn('Missing Supabase environment variables - using fallback values for development:', {
     url: !!supabaseUrl,
     key: !!supabaseAnonKey
   });
+  console.warn('Please check your .env.local file and ensure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set');
 }
 
 // Create Supabase client with fallback values for development

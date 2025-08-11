@@ -18,7 +18,7 @@ import SimpleChat from '@/components/SimpleChat';
 import SupabaseReelsPage from '@/pages/SupabaseReelsPage';
 import InstagramReelsPage from '@/pages/InstagramReelsPage';
 import InstagramChatPage from '@/pages/InstagramChatPage';
-import Loader from '@/components/Loader';
+import NischayLoader from '@/components/NischayLoader';
 import Dock, { DockItemData } from '@/components/Dock';
 import Particles from '@/components/Particles';
 import FloatingAIButton from '@/components/FloatingAIButton';
@@ -31,7 +31,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-background">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+        <NischayLoader size="lg" />
       </div>
     );
   }
@@ -89,16 +89,6 @@ const DockWrapper: React.FC = () => {
 // Main App Content Component
 const AppContent: React.FC = () => {
   const { user, loading } = useSupabaseAuth();
-  const [showLoader, setShowLoader] = useState(true);
-
-  const handleLoadingComplete = () => {
-    setShowLoader(false);
-  };
-
-  // Show initial loader
-  if (showLoader) {
-    return <Loader onLoadingComplete={handleLoadingComplete} />;
-  }
 
   // Show login page if not authenticated
   if (!loading && !user) {
@@ -137,7 +127,7 @@ const AppContent: React.FC = () => {
         <Route path="/simple-login" element={<SimpleLogin />} />
         <Route path="/intake" element={
           <ProtectedRoute>
-            <AddictionIntakeForm />
+            <AddictionIntakeForm onSubmit={() => {}} onClose={() => {}} />
           </ProtectedRoute>
         } />
         <Route path="/chat" element={

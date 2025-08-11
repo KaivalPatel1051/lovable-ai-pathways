@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal, Play, Pause, Volume2, VolumeX, User } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useSupabaseAuth } from '../contexts/SupabaseAuthContext';
+import NischayLoader from '../components/NischayLoader';
 
 interface InstagramReel {
   id: string;
@@ -573,11 +574,8 @@ const InstagramReelsPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4"></div>
-          <p className="text-white text-lg">Loading Reels...</p>
-        </div>
+      <div className="flex items-center justify-center h-screen bg-background">
+        <NischayLoader size="lg" />
       </div>
     );
   }
@@ -585,14 +583,14 @@ const InstagramReelsPage: React.FC = () => {
   const currentReel = reels[currentIndex];
 
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden">
+    <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Progress indicator */}
       <div className="absolute top-4 left-4 right-4 z-50 flex space-x-1">
         {reels.map((_, index) => (
           <div
             key={index}
             className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-              index === currentIndex ? 'bg-white' : 'bg-white/30'
+              index === currentIndex ? 'bg-primary neon-glow' : 'bg-muted'
             }`}
           />
         ))}
@@ -607,10 +605,10 @@ const InstagramReelsPage: React.FC = () => {
       >
         <AnimatePresence mode="wait">
           <motion.div
-            key={currentReel?.id}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            key={currentReel.id}
+            initial={{ opacity: 0, scale: 1.1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.3 }}
             className="absolute inset-0"
           >

@@ -69,23 +69,71 @@ export const SupabaseAuthProvider: React.FC<SupabaseAuthProviderProps> = ({ chil
       try {
         console.log('Initializing authentication...');
         
-        // Get initial session
-        const { data: { session }, error } = await supabase.auth.getSession();
+        // Check if we have valid Supabase credentials
+        const hasValidSupabase = import.meta.env.VITE_SUPABASE_URL && 
+                                 import.meta.env.VITE_SUPABASE_ANON_KEY &&
+                                 !import.meta.env.VITE_SUPABASE_URL.includes('placeholder');
+        
+        if (!hasValidSupabase) {
+          console.warn('No valid Supabase credentials found - using development mode');
+          // For development without Supabase, create a mock user to show the dashboard
+          const mockUser = {
+            id: 'dev-user-123',
+            email: 'dev@example.com',
+            user_metadata: {
+              username: 'Developer',
+              first_name: 'Dev',
+              last_name: 'User'
+            }
+          } as any;
+          
+          setUser(mockUser);
+          setProfile({
+            id: 'dev-user-123',
+            username: 'developer',
+            first_name: 'Dev',
+            last_name: 'User',
+            email: 'dev@example.com',
+            days_sober: 42,
+            is_active: true,
+            role: 'user',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          } as any);
+          setLoading(false);
+          return;
+        }
+        
+        // Add timeout to prevent infinite loading
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('Auth timeout')), 5000);
+        });
+        
+        // Get initial session with timeout
+        const sessionPromise = supabase.auth.getSession();
+        const { data: { session }, error } = await Promise.race([sessionPromise, timeoutPromise]) as any;
         
         if (error) {
           console.error('Error getting session:', error);
+          // Continue without session - show login page
         } else {
           console.log('Session retrieved:', session?.user?.email || 'No user');
           setSession(session);
           setUser(session?.user ?? null);
           
           if (session?.user) {
-            const userProfile = await fetchProfile(session.user.id);
-            setProfile(userProfile);
+            try {
+              const userProfile = await fetchProfile(session.user.id);
+              setProfile(userProfile);
+            } catch (profileError) {
+              console.error('Error fetching profile:', profileError);
+              // Continue without profile
+            }
           }
         }
       } catch (error) {
         console.error('Error initializing auth:', error);
+        // Set loading to false even on error to show login page
       } finally {
         setLoading(false);
       }

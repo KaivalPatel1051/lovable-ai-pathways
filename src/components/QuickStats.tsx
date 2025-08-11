@@ -9,45 +9,45 @@ const QuickStats = () => {
       label: "Current Streak",
       value: "42 days",
       progress: 84,
-      gradient: "gradient-energy"
+      color: "text-accent"
     },
     {
       icon: Target,
       label: "Daily Goals",
       value: "3/4 completed",
       progress: 75,
-      gradient: "gradient-calm"
+      color: "text-primary"
     },
     {
       icon: Calendar,
       label: "Check-ins",
       value: "38/42 days",
       progress: 90,
-      gradient: "gradient-healing"
+      color: "text-success"
     },
     {
       icon: Trophy,
       label: "Achievements",
       value: "12 earned",
       progress: 60,
-      gradient: "gradient-hero"
+      color: "text-secondary"
     }
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-6">
       {stats.map((stat) => (
-        <Card key={stat.label} className="shadow-gentle animate-float-gentle">
-          <CardContent className="p-4 space-y-3">
-            <div className="flex items-center gap-2">
-              <div className={`p-2 rounded-xl ${stat.gradient}`}>
-                <stat.icon className="h-4 w-4 text-white" />
+        <Card key={stat.label} className="serene-border hover:serene-glow transition-all duration-300">
+          <CardContent className="p-6 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-lg bg-muted/50">
+                <stat.icon className={`h-5 w-5 ${stat.color}`} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-muted-foreground truncate">
+                <p className="text-sm font-medium text-muted-foreground truncate">
                   {stat.label}
                 </p>
-                <p className="text-sm font-semibold">{stat.value}</p>
+                <p className="text-lg font-semibold text-foreground">{stat.value}</p>
               </div>
             </div>
             <Progress 

@@ -1,0 +1,35 @@
+.text-type {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.text-type__content {
+  display: inline;
+  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.8));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+.text-type__cursor {
+  display: inline-block;
+  color: hsl(var(--primary));
+  font-weight: 400;
+  margin-left: 2px;
+}
+
+.text-type__cursor--hidden {
+  opacity: 0;
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
