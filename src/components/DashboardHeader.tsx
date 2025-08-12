@@ -10,6 +10,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from 'react-router-dom';
 import { 
   Bell, 
   Settings, 
@@ -41,6 +42,7 @@ interface NotificationItem {
 
 const DashboardHeader = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [notifications, setNotifications] = useState<NotificationItem[]>([
     {
       id: '1',
@@ -140,6 +142,7 @@ const DashboardHeader = () => {
       toast({ title: 'Sign out failed', description: error.message });
     } else {
       toast({ title: 'Signed out', description: 'You have been signed out successfully.' });
+      navigate('/login');
     }
   };
 
