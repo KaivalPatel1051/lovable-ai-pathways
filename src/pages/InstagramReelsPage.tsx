@@ -54,6 +54,8 @@ const InstagramReelsPage: React.FC = () => {
   const [showLikeAnimation, setShowLikeAnimation] = useState(false);
   const [lastTap, setLastTap] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const pressTimeoutRef = useRef<number | null>(null);
+  const [isLongPressing, setIsLongPressing] = useState(false);
 
   useEffect(() => {
     loadReels();
@@ -69,6 +71,44 @@ const InstagramReelsPage: React.FC = () => {
       }
     }
   }, [currentIndex, isPlaying]);
+
+  // Auto-pause when current video is not sufficiently visible
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.target === v) {
+            if (entry.intersectionRatio < 0.6) {
+              setIsPlaying(false);
+            }
+          }
+        }
+      },
+      { threshold: [0, 0.25, 0.5, 0.6, 0.75, 1] }
+    );
+    observer.observe(v);
+    return () => observer.disconnect();
+  }, [currentIndex]);
+
+  // Pause when comments are open
+  useEffect(() => {
+    if (showComments) {
+      setIsPlaying(false);
+    }
+  }, [showComments]);
+
+  // Pause when tab is hidden; resume when visible (if previously playing)
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (document.hidden) {
+        setIsPlaying(false);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, []);
 
   const loadReels = async () => {
     try {
@@ -556,6 +596,12 @@ const InstagramReelsPage: React.FC = () => {
       } else if (e.key === ' ') {
         e.preventDefault();
         setIsPlaying(!isPlaying);
+      } else if (e.key === 'ArrowLeft') {
+        const v = videoRef.current;
+        if (v) v.currentTime = Math.max(0, v.currentTime - 5);
+      } else if (e.key === 'ArrowRight') {
+        const v = videoRef.current;
+        if (v) v.currentTime = Math.min(v.duration || v.currentTime + 5, v.currentTime + 5);
       }
     };
 
@@ -637,6 +683,40 @@ const InstagramReelsPage: React.FC = () => {
                   setIsPlaying(!isPlaying);
                 }
                 setLastTap(now);
+              }}
+              onPointerDown={() => {
+                if (pressTimeoutRef.current) window.clearTimeout(pressTimeoutRef.current);
+                // Start long-press timer
+                pressTimeoutRef.current = window.setTimeout(() => {
+                  setIsLongPressing(true);
+                  setIsPlaying(false);
+                }, 350);
+              }}
+              onPointerUp={() => {
+                if (pressTimeoutRef.current) window.clearTimeout(pressTimeoutRef.current);
+                if (isLongPressing) {
+                  // Resume when releasing long press
+                  setIsPlaying(true);
+                  setIsLongPressing(false);
+                }
+              }}
+            />
+
+            {/* Tap regions for seek left/right */}
+            <div
+              className="absolute inset-y-0 left-0 w-1/3"
+              onClick={(e) => {
+                e.stopPropagation();
+                const v = videoRef.current;
+                if (v) v.currentTime = Math.max(0, v.currentTime - 5);
+              }}
+            />
+            <div
+              className="absolute inset-y-0 right-0 w-1/3"
+              onClick={(e) => {
+                e.stopPropagation();
+                const v = videoRef.current;
+                if (v) v.currentTime = Math.min(v.duration || v.currentTime + 5, v.currentTime + 5);
               }}
             />
 
