@@ -25,6 +25,7 @@ import {
   Smartphone,
   Mail,
   MessageSquare,
+  Plus,
   Clock,
   Flame,
   Target,
@@ -250,7 +251,17 @@ const DashboardHeader = () => {
         </div>
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex items-center gap-2">
+        {/* Create Reel Button */}
+        <Button 
+          variant="ghost" 
+          size="icon"
+          className="text-white hover:bg-white/20 transition-smooth"
+          onClick={() => navigate('/create-reel')}
+        >
+          <Plus className="h-6 w-6" />
+        </Button>
+
         {/* Notifications */}
         <Sheet>
           <SheetTrigger asChild>

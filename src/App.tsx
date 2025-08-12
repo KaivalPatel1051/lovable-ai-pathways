@@ -20,7 +20,8 @@ import TrackerPage from '@/pages/TrackerPage';
 import CommunityPage from '@/pages/CommunityPage';
 import AchievementsPage from '@/pages/AchievementsPage';
 import InstagramChatPage from '@/pages/InstagramChatPage';
-import InstagramReelsPage from '@/pages/InstagramReelsPage';
+import InstagramReelsPage from './pages/InstagramReelsPage';
+import CreateReelPage from './pages/CreateReelPage';
 
 const App: React.FC = () => {
   return (
@@ -46,7 +47,8 @@ const App: React.FC = () => {
                     <Route path="/community" element={<CommunityPage />} />
                     <Route path="/achievements" element={<AchievementsPage />} />
                     <Route path="/chat" element={<InstagramChatPage />} />
-                    <Route path="/reels" element={<InstagramReelsPage />} />
+                              <Route path="/reels" element={<InstagramReelsPage />} />
+          <Route path="/create-reel" element={<CreateReelPage />} />
                     <Route path="*" element={<Navigate to="/dashboard" replace />} />
                   </Routes>
                 </MainAppLayout>
