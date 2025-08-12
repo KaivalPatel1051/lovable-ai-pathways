@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSupabaseAuth } from "@/contexts/SupabaseAuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -78,13 +79,31 @@ const DashboardHeader = () => {
     quietEnd: '08:00'
   });
 
+  const { user, profile, signOut } = useSupabaseAuth();
   const [userProfile, setUserProfile] = useState({
-    name: 'Jordan',
-    email: 'jordan@example.com',
-    daysSober: 42,
-    streak: 42,
+    name: 'User',
+    email: 'user@example.com',
+    daysSober: 0,
+    streak: 0,
     avatar: '/placeholder-avatar.png'
   });
+
+  // Populate from Supabase auth/profile
+  useEffect(() => {
+    const first = profile?.first_name || (user?.user_metadata as any)?.first_name || '';
+    const last = profile?.last_name || (user?.user_metadata as any)?.last_name || '';
+    const username = profile?.username || (user?.user_metadata as any)?.username || '';
+    const displayName = [first, last].filter(Boolean).join(' ') || username || user?.email || 'User';
+
+    setUserProfile(prev => ({
+      ...prev,
+      name: displayName,
+      email: profile?.email || user?.email || prev.email,
+      daysSober: profile?.days_sober ?? prev.daysSober,
+      streak: profile?.days_sober ?? prev.streak,
+      avatar: profile?.profile_picture || prev.avatar,
+    }));
+  }, [user, profile]);
 
   const currentHour = new Date().getHours();
   const getGreeting = () => {
@@ -115,12 +134,13 @@ const DashboardHeader = () => {
     });
   };
 
-  const handleSignOut = () => {
-    toast({
-      title: "Signing Out",
-      description: "You have been signed out successfully.",
-    });
-    // In production, this would handle actual sign out logic
+  const handleSignOut = async () => {
+    const { error } = await signOut();
+    if (error) {
+      toast({ title: 'Sign out failed', description: error.message });
+    } else {
+      toast({ title: 'Signed out', description: 'You have been signed out successfully.' });
+    }
   };
 
   const getNotificationIcon = (type: string) => {

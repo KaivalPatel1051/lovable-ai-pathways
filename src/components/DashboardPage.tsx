@@ -6,6 +6,7 @@ import MotivationalCard from '../components/MotivationalCard';
 import QuickStats from '../components/QuickStats';
 import RecentAchievements from '../components/RecentAchievements';
 import PanicButton from '../components/PanicButton';
+import MagicBento from '../components/MagicBento';
 
 const DashboardPage: React.FC = () => {
   const containerVariants = {
@@ -55,6 +56,11 @@ const DashboardPage: React.FC = () => {
             <MotivationalCard />
           </motion.div>
         </div>
+
+        {/* Magic Bento Section */}
+        <motion.div variants={itemVariants} className="cursor-target">
+          <MagicBento enableSpotlight enableStars enableBorderGlow enableTilt glowColor="132, 0, 255" />
+        </motion.div>
 
         {/* Recent Achievements */}
         <motion.div variants={itemVariants} className="cursor-target">

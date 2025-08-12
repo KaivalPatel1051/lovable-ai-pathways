@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { MagicBentoCard, DarkPalette } from "./MagicBento";
 
 const MoodCheckIn = () => {
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
@@ -16,11 +16,17 @@ const MoodCheckIn = () => {
   ];
 
   return (
-    <Card className="serene-border hover:serene-glow transition-all duration-300">
-      <CardHeader className="pb-4">
-        <CardTitle className="text-xl font-medium text-foreground">How are you feeling today?</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
+    <MagicBentoCard
+      className="rounded-xl"
+      enableTilt
+      clickEffect
+      enableMagnetism
+      style={{ backgroundColor: DarkPalette.surface } as React.CSSProperties}
+    >
+      <div className="pb-4 pt-6 px-6">
+        <h3 className="text-xl font-medium text-white">How are you feeling today?</h3>
+      </div>
+      <div className="space-y-6 px-6 pb-6">
         <div className="flex justify-between gap-3">
           {moods.map((mood) => (
             <Button
@@ -40,7 +46,7 @@ const MoodCheckIn = () => {
         </div>
         {selectedMood && (
           <div className="text-center space-y-2 animate-fade-in">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-purple-200/80">
               Thank you for sharing. Remember, every feeling is valid.
             </p>
             <Button 
@@ -58,8 +64,8 @@ const MoodCheckIn = () => {
             </Button>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </MagicBentoCard>
   );
 };
 

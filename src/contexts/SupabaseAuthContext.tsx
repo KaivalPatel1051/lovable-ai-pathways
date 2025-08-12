@@ -156,6 +156,16 @@ export const SupabaseAuthProvider: React.FC<SupabaseAuthProviderProps> = ({ chil
           setProfile(null);
         }
         
+        // Ensure we leave the login page after successful sign-in
+        if (event === 'SIGNED_IN') {
+          try {
+            // Use a hard redirect to avoid stale router state
+            window.location.replace('/dashboard');
+          } catch (_) {
+            // no-op
+          }
+        }
+        
         setLoading(false);
       }
     );

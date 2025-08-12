@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { MagicBentoCard, DarkPalette } from '@/components/MagicBento';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -151,7 +152,7 @@ const GuidancePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen pb-20" style={{ backgroundColor: DarkPalette.background }}>
       {/* Header */}
       <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
         <div className="flex items-center justify-between p-4">
@@ -176,130 +177,134 @@ const GuidancePage = () => {
 
           <TabsContent value="find" className="space-y-4">
             {/* Search and Filters */}
-            <Card>
-              <CardContent className="p-4 space-y-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search by name or specialization..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
+            <MagicBentoCard className="rounded-xl">
+              <Card className="rounded-xl border-border/40" style={{ backgroundColor: DarkPalette.surface }}>
+                <CardContent className="p-4 space-y-4">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Search by name or specialization..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
                 
-                <div className="flex flex-wrap gap-2">
-                  {specializations.map((spec) => (
-                    <Button
-                      key={spec}
-                      variant={selectedSpecialization === spec ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setSelectedSpecialization(spec)}
-                      className="text-xs"
-                    >
-                      {spec === 'all' ? 'All' : spec}
-                    </Button>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                  <div className="flex flex-wrap gap-2">
+                    {specializations.map((spec) => (
+                      <Button
+                        key={spec}
+                        variant={selectedSpecialization === spec ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setSelectedSpecialization(spec)}
+                        className="text-xs"
+                      >
+                        {spec === 'all' ? 'All' : spec}
+                      </Button>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </MagicBentoCard>
 
             {/* Therapists List */}
             <div className="space-y-4">
               {filteredPsychiatrists.map((psychiatrist) => (
-                <Card key={psychiatrist.id} className="overflow-hidden">
-                  <CardContent className="p-4">
-                    <div className="flex items-start space-x-4">
-                      <div className="relative">
-                        <Avatar className="h-16 w-16">
-                          <AvatarImage src={psychiatrist.avatar} />
-                          <AvatarFallback>{psychiatrist.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                        </Avatar>
-                        {psychiatrist.isOnline && (
-                          <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-background" />
-                        )}
-                      </div>
-                      
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-semibold text-lg">{psychiatrist.name}</h3>
-                          {psychiatrist.verified && (
-                            <Shield className="h-4 w-4 text-blue-500" />
+                <MagicBentoCard key={psychiatrist.id} className="rounded-xl">
+                  <Card className="overflow-hidden rounded-xl border-border/40" style={{ backgroundColor: DarkPalette.surface }}>
+                    <CardContent className="p-4">
+                      <div className="flex items-start space-x-4">
+                        <div className="relative">
+                          <Avatar className="h-16 w-16">
+                            <AvatarImage src={psychiatrist.avatar} />
+                            <AvatarFallback>{psychiatrist.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                          </Avatar>
+                          {psychiatrist.isOnline && (
+                            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-background" />
                           )}
                         </div>
                         
-                        <p className="text-sm text-muted-foreground mb-2">{psychiatrist.title}</p>
-                        
-                        <div className="flex items-center gap-4 mb-2">
-                          <div className="flex items-center gap-1">
-                            <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                            <span className="text-sm font-medium">{psychiatrist.rating}</span>
-                            <span className="text-sm text-muted-foreground">({psychiatrist.reviews})</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="font-semibold text-lg">{psychiatrist.name}</h3>
+                            {psychiatrist.verified && (
+                              <Shield className="h-4 w-4 text-blue-500" />
+                            )}
                           </div>
-                          <div className="flex items-center gap-1">
-                            <Award className="h-4 w-4 text-muted-foreground" />
-                            <span className="text-sm text-muted-foreground">{psychiatrist.experience}</span>
+                          
+                          <p className="text-sm text-muted-foreground mb-2">{psychiatrist.title}</p>
+                          
+                          <div className="flex items-center gap-4 mb-2">
+                            <div className="flex items-center gap-1">
+                              <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                              <span className="text-sm font-medium">{psychiatrist.rating}</span>
+                              <span className="text-sm text-muted-foreground">({psychiatrist.reviews})</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Award className="h-4 w-4 text-muted-foreground" />
+                              <span className="text-sm text-muted-foreground">{psychiatrist.experience}</span>
+                            </div>
                           </div>
-                        </div>
-                        
-                        <div className="flex flex-wrap gap-1 mb-3">
-                          {psychiatrist.specialization.slice(0, 2).map((spec) => (
-                            <Badge key={spec} variant="secondary" className="text-xs">
-                              {spec}
-                            </Badge>
-                          ))}
-                          {psychiatrist.specialization.length > 2 && (
-                            <Badge variant="outline" className="text-xs">
-                              +{psychiatrist.specialization.length - 2} more
-                            </Badge>
-                          )}
-                        </div>
-                        
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center gap-1">
-                            <Clock className="h-4 w-4 text-muted-foreground" />
-                            <span className="text-sm text-muted-foreground">{psychiatrist.nextAvailable}</span>
+                          
+                          <div className="flex flex-wrap gap-1 mb-3">
+                            {psychiatrist.specialization.slice(0, 2).map((spec) => (
+                              <Badge key={spec} variant="secondary" className="text-xs">
+                                {spec}
+                              </Badge>
+                            ))}
+                            {psychiatrist.specialization.length > 2 && (
+                              <Badge variant="outline" className="text-xs">
+                                +{psychiatrist.specialization.length - 2} more
+                              </Badge>
+                            )}
                           </div>
-                          <div className="flex items-center gap-1">
-                            <span className="text-lg font-semibold">${psychiatrist.sessionPrice}</span>
-                            <span className="text-sm text-muted-foreground">/session</span>
+                          
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-1">
+                              <Clock className="h-4 w-4 text-muted-foreground" />
+                              <span className="text-sm text-muted-foreground">{psychiatrist.nextAvailable}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <span className="text-lg font-semibold">${psychiatrist.sessionPrice}</span>
+                              <span className="text-sm text-muted-foreground">/session</span>
+                            </div>
                           </div>
-                        </div>
-                        
-                        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                          {psychiatrist.bio}
-                        </p>
-                        
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            onClick={() => handleBookSession(psychiatrist)}
-                            className="flex-1"
-                          >
-                            <Calendar className="h-4 w-4 mr-2" />
-                            Book Session
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleStartChat(psychiatrist)}
-                            disabled={!psychiatrist.isOnline}
-                          >
-                            <MessageCircle className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleStartCall(psychiatrist)}
-                            disabled={!psychiatrist.isOnline}
-                          >
-                            <Phone className="h-4 w-4" />
-                          </Button>
+                          
+                          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                            {psychiatrist.bio}
+                          </p>
+                          
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              onClick={() => handleBookSession(psychiatrist)}
+                              className="flex-1"
+                            >
+                              <Calendar className="h-4 w-4 mr-2" />
+                              Book Session
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleStartChat(psychiatrist)}
+                              disabled={!psychiatrist.isOnline}
+                            >
+                              <MessageCircle className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleStartCall(psychiatrist)}
+                              disabled={!psychiatrist.isOnline}
+                            >
+                              <Phone className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </MagicBentoCard>
               ))}
             </div>
           </TabsContent>

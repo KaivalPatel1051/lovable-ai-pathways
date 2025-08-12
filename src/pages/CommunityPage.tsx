@@ -21,6 +21,7 @@ import {
   Globe
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { MagicBentoCard, DarkPalette } from '@/components/MagicBento';
 
 interface Program {
   id: string;
@@ -323,8 +324,9 @@ const CommunityPage = () => {
 
           <TabsContent value="programs" className="space-y-4">
             {/* Search and Filters */}
-            <Card>
-              <CardContent className="p-4 space-y-4">
+            <MagicBentoCard className="rounded-xl" enableTilt clickEffect enableMagnetism style={{ backgroundColor: DarkPalette.surface } as React.CSSProperties}>
+              <Card className="rounded-xl border-border/40" style={{ backgroundColor: DarkPalette.surface }}>
+                <CardContent className="p-4 space-y-4">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -348,14 +350,16 @@ const CommunityPage = () => {
                     </Button>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </MagicBentoCard>
 
             {/* Programs List */}
             <div className="space-y-4">
               {filteredPrograms.map((program) => (
-                <Card key={program.id} className="overflow-hidden">
-                  <CardContent className="p-4">
+                <MagicBentoCard key={program.id} className="rounded-xl" enableTilt clickEffect enableMagnetism style={{ backgroundColor: DarkPalette.surface } as React.CSSProperties}>
+                  <Card className="overflow-hidden rounded-xl border-border/40" style={{ backgroundColor: DarkPalette.surface }}>
+                    <CardContent className="p-4">
                     <div className="space-y-4">
                       {/* Header */}
                       <div className="flex items-start justify-between">
@@ -451,8 +455,9 @@ const CommunityPage = () => {
                         </Button>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </MagicBentoCard>
               ))}
             </div>
           </TabsContent>

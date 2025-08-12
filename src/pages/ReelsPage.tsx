@@ -7,6 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Heart, MessageCircle, Share, Bookmark, Play, Pause, Volume2, VolumeX, ArrowLeft, MoreHorizontal, Send, Smile } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { MagicBentoCard, DarkPalette } from '@/components/MagicBento';
 
 interface Reel {
   id: string;
@@ -460,95 +461,99 @@ const ReelsPage = () => {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 500 }}
-              className="w-full bg-card rounded-t-xl max-h-[70vh] flex flex-col"
+              className="w-full flex flex-col"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-center justify-between p-4 border-b border-border">
-                <h3 className="text-lg font-semibold">Comments</h3>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowComments(false)}
-                  className="cursor-target"
-                >
-                  ✕
-                </Button>
-              </div>
-
-              <ScrollArea className="flex-1 p-4">
-                <div className="space-y-4">
-                  {/* Sample Comments */}
-                  <div className="flex space-x-3">
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback>JD</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <span className="font-semibold text-sm">john_doe</span>
-                        <span className="text-xs text-muted-foreground">2h</span>
-                      </div>
-                      <p className="text-sm">This really helped me today. Thank you for sharing! 🙏</p>
-                      <div className="flex items-center space-x-4 mt-2">
-                        <Button variant="ghost" size="sm" className="p-0 h-auto text-xs cursor-target">
-                          <Heart className="h-3 w-3 mr-1" />
-                          12
-                        </Button>
-                        <Button variant="ghost" size="sm" className="p-0 h-auto text-xs cursor-target">
-                          Reply
-                        </Button>
-                      </div>
-                    </div>
+              <MagicBentoCard className="rounded-t-xl w-full" enableTilt clickEffect enableMagnetism style={{ backgroundColor: DarkPalette.surface } as React.CSSProperties}>
+                <div className="bg-card rounded-t-xl max-h-[70vh] flex flex-col" style={{ backgroundColor: DarkPalette.surface }}>
+                  <div className="flex items-center justify-between p-4 border-b border-border">
+                    <h3 className="text-lg font-semibold">Comments</h3>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowComments(false)}
+                      className="cursor-target"
+                    >
+                      ✕
+                    </Button>
                   </div>
 
-                  <div className="flex space-x-3">
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback>SM</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <span className="font-semibold text-sm">sarah_m</span>
-                        <span className="text-xs text-muted-foreground">1h</span>
+                  <ScrollArea className="flex-1 p-4">
+                    <div className="space-y-4">
+                      {/* Sample Comments */}
+                      <div className="flex space-x-3">
+                        <Avatar className="h-8 w-8">
+                          <AvatarFallback>JD</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2">
+                            <span className="font-semibold text-sm">john_doe</span>
+                            <span className="text-xs text-muted-foreground">2h</span>
+                          </div>
+                          <p className="text-sm">This really helped me today. Thank you for sharing! 🙏</p>
+                          <div className="flex items-center space-x-4 mt-2">
+                            <Button variant="ghost" size="sm" className="p-0 h-auto text-xs cursor-target">
+                              <Heart className="h-3 w-3 mr-1" />
+                              12
+                            </Button>
+                            <Button variant="ghost" size="sm" className="p-0 h-auto text-xs cursor-target">
+                              Reply
+                            </Button>
+                          </div>
+                        </div>
                       </div>
-                      <p className="text-sm">Amazing technique! I've been using this for weeks now ✨</p>
-                      <div className="flex items-center space-x-4 mt-2">
-                        <Button variant="ghost" size="sm" className="p-0 h-auto text-xs cursor-target">
-                          <Heart className="h-3 w-3 mr-1 fill-red-500 text-red-500" />
-                          8
-                        </Button>
-                        <Button variant="ghost" size="sm" className="p-0 h-auto text-xs cursor-target">
-                          Reply
-                        </Button>
+
+                      <div className="flex space-x-3">
+                        <Avatar className="h-8 w-8">
+                          <AvatarFallback>SM</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2">
+                            <span className="font-semibold text-sm">sarah_m</span>
+                            <span className="text-xs text-muted-foreground">1h</span>
+                          </div>
+                          <p className="text-sm">Amazing technique! I've been using this for weeks now ✨</p>
+                          <div className="flex items-center space-x-4 mt-2">
+                            <Button variant="ghost" size="sm" className="p-0 h-auto text-xs cursor-target">
+                              <Heart className="h-3 w-3 mr-1 fill-red-500 text-red-500" />
+                              8
+                            </Button>
+                            <Button variant="ghost" size="sm" className="p-0 h-auto text-xs cursor-target">
+                              Reply
+                            </Button>
+                          </div>
+                        </div>
                       </div>
+                    </div>
+                  </ScrollArea>
+
+                  <div className="p-4 border-t border-border">
+                    <div className="flex items-center space-x-2">
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback>You</AvatarFallback>
+                      </Avatar>
+                      <Input
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        placeholder="Add a comment..."
+                        className="flex-1 cursor-target"
+                        onKeyPress={(e) => e.key === 'Enter' && handleCommentSubmit()}
+                      />
+                      <Button variant="ghost" size="sm" className="cursor-target">
+                        <Smile className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        onClick={handleCommentSubmit}
+                        disabled={!newComment.trim()}
+                        size="sm"
+                        className="cursor-target"
+                      >
+                        <Send className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 </div>
-              </ScrollArea>
-
-              <div className="p-4 border-t border-border">
-                <div className="flex items-center space-x-2">
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback>You</AvatarFallback>
-                  </Avatar>
-                  <Input
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    placeholder="Add a comment..."
-                    className="flex-1 cursor-target"
-                    onKeyPress={(e) => e.key === 'Enter' && handleCommentSubmit()}
-                  />
-                  <Button variant="ghost" size="sm" className="cursor-target">
-                    <Smile className="h-4 w-4" />
-                  </Button>
-                  <Button 
-                    onClick={handleCommentSubmit}
-                    disabled={!newComment.trim()}
-                    size="sm"
-                    className="cursor-target"
-                  >
-                    <Send className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+              </MagicBentoCard>
             </motion.div>
           </motion.div>
         )}

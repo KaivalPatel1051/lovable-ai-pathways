@@ -8,10 +8,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Mail, Lock, User, UserPlus, LogIn, AlertCircle, CheckCircle } from 'lucide-react';
 import { FcGoogle } from 'react-icons/fc';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useSupabaseAuth } from '@/contexts/SupabaseAuthContext';
 import { supabase } from '@/lib/supabase';
 import Particles from '@/components/Particles';
+import Orb from '@/components/Orb';
+import StarBorder from '@/components/StarBorder';
 
 interface LoginFormData {
   email: string;
@@ -29,6 +31,7 @@ interface RegisterFormData {
 
 const SupabaseLoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { signIn, signUp, user, loading } = useSupabaseAuth();
   
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
@@ -68,7 +71,7 @@ const SupabaseLoginPage: React.FC = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/dashboard`
+          redirectTo: window.location.origin
         }
       });
 
@@ -167,16 +170,60 @@ const SupabaseLoginPage: React.FC = () => {
     );
   }
 
+  // Determine mount transition variant (default: fadeUp). Can be set from Loader via route state
+  const routeState = (location.state || {}) as { fromLoader?: boolean; loginTransition?: string };
+  const chosen = routeState.loginTransition || 'fadeUp';
+  const variants: Record<string, { initial: any; animate: any; transition?: any } > = {
+    fadeUp: {
+      initial: { opacity: 0, y: 20 },
+      animate: { opacity: 1, y: 0 },
+      transition: { duration: 0.5 }
+    },
+    scaleBlur: {
+      initial: { opacity: 0, scale: 0.98, filter: 'blur(8px)' },
+      animate: { opacity: 1, scale: 1, filter: 'blur(0px)' },
+      transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }
+    },
+    slideRight: {
+      initial: { opacity: 0, x: 40 },
+      animate: { opacity: 1, x: 0 },
+      transition: { duration: 0.5, ease: 'easeOut' }
+    },
+    zoomOutReveal: {
+      initial: { opacity: 0, scale: 1.08 },
+      animate: { opacity: 1, scale: 1 },
+      transition: { duration: 0.45, ease: 'easeOut' }
+    }
+  };
+
+  const current = variants[chosen] || variants.fadeUp;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Particles Background */}
-      <Particles />
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Background Orb Effect */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="w-96 h-96 opacity-30">
+          <Orb 
+            hue={240}
+            hoverIntensity={0.3}
+            rotateOnHover={true}
+            forceHoverState={false}
+          />
+        </div>
+      </div>
+      
+      {/* Background Particles */}
+      <Particles 
+        particleCount={80}
+        particleColors={["#ffffff", "#a855f7", "#3b82f6"]}
+        speed={0.3}
+      />
       
       {/* Login/Register Card */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        initial={current.initial}
+        animate={current.animate}
+        transition={current.transition}
         className="w-full max-w-md z-10 relative"
       >
         <Card className="bg-black/20 backdrop-blur-md border-white/10 shadow-2xl">
@@ -284,10 +331,14 @@ const SupabaseLoginPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <Button
+                  <StarBorder
+                    as="button"
                     type="submit"
-                    className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                    className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 transition-all duration-300"
                     disabled={isLoading}
+                    color="rgba(168, 85, 247, 0.8)"
+                    speed="3s"
+                    thickness={2}
                   >
                     {isLoading ? (
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
@@ -295,7 +346,7 @@ const SupabaseLoginPage: React.FC = () => {
                       <LogIn className="h-4 w-4 mr-2" />
                     )}
                     {isLoading ? 'Signing In...' : 'Sign In'}
-                  </Button>
+                  </StarBorder>
                 </form>
               </TabsContent>
 
@@ -421,10 +472,14 @@ const SupabaseLoginPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <Button
+                  <StarBorder
+                    as="button"
                     type="submit"
-                    className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700"
+                    className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 transition-all duration-300"
                     disabled={isLoading}
+                    color="rgba(34, 197, 94, 0.8)"
+                    speed="3s"
+                    thickness={2}
                   >
                     {isLoading ? (
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
@@ -432,7 +487,7 @@ const SupabaseLoginPage: React.FC = () => {
                       <UserPlus className="h-4 w-4 mr-2" />
                     )}
                     {isLoading ? 'Creating Account...' : 'Create Account'}
-                  </Button>
+                  </StarBorder>
                 </form>
               </TabsContent>
             </Tabs>

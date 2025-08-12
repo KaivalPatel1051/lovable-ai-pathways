@@ -1,0 +1,251 @@
+.loader-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0a0a0a;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+.loader-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.loader-gradient-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(99, 102, 241, 0.1) 0%,
+    rgba(139, 92, 246, 0.05) 35%,
+    rgba(6, 182, 212, 0.03) 70%,
+    transparent 100%
+  );
+  z-index: 2;
+}
+
+.loader-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  text-align: center;
+}
+
+.loader-brand {
+  margin-bottom: 1rem;
+}
+
+.brand-icon {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-circle {
+  width: 60px;
+  height: 60px;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #6366f1, #8b5cf6, #06b6d4) padding-box,
+              linear-gradient(45deg, #6366f1, #8b5cf6, #06b6d4) border-box;
+  position: relative;
+}
+
+.brand-circle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(45deg, #6366f1, #8b5cf6);
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+}
+
+.loader-text-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.loader-main-text {
+  font-size: 4rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+  letter-spacing: 0.1em;
+}
+
+.loader-cursor {
+  color: #6366f1 !important;
+  font-weight: 300;
+  text-shadow: 0 0 10px rgba(99, 102, 241, 0.8);
+}
+
+.loader-subtitle {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  margin-top: 0.5rem;
+}
+
+.loader-indicator {
+  margin-top: 2rem;
+}
+
+.loading-dots {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #6366f1, #8b5cf6);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+}
+
+.loader-bg-elements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.floating-element {
+  position: absolute;
+  border-radius: 50%;
+  background: linear-gradient(45deg, 
+    rgba(99, 102, 241, 0.1), 
+    rgba(139, 92, 246, 0.1), 
+    rgba(6, 182, 212, 0.1)
+  );
+  backdrop-filter: blur(10px);
+}
+
+.element-1 {
+  width: 100px;
+  height: 100px;
+  top: 20%;
+  left: 15%;
+  box-shadow: 0 0 50px rgba(99, 102, 241, 0.2);
+}
+
+.element-2 {
+  width: 150px;
+  height: 150px;
+  top: 60%;
+  right: 20%;
+  box-shadow: 0 0 60px rgba(139, 92, 246, 0.2);
+}
+
+.element-3 {
+  width: 80px;
+  height: 80px;
+  bottom: 25%;
+  left: 25%;
+  box-shadow: 0 0 40px rgba(6, 182, 212, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .loader-main-text {
+    font-size: 3rem;
+  }
+  
+  .loader-subtitle {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+  
+  .brand-icon {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .brand-circle {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .brand-circle::before {
+    width: 15px;
+    height: 15px;
+  }
+  
+  .floating-element {
+    opacity: 0.5;
+  }
+  
+  .element-1 {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .element-2 {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .element-3 {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .loader-main-text {
+    font-size: 2.5rem;
+  }
+  
+  .loader-content {
+    gap: 1.5rem;
+  }
+}
+
+/* Animation Enhancements */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.loader-main-text {
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}

@@ -1,7 +1,7 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Quote, RefreshCw } from "lucide-react";
 import { useState } from "react";
+import { MagicBentoCard } from "./MagicBento";
 
 const MotivationalCard = () => {
   const [currentQuote, setCurrentQuote] = useState(0);
@@ -31,28 +31,35 @@ const MotivationalCard = () => {
   };
 
   return (
-    <Card className="bg-black shadow-gentle">
-      <CardContent className="p-6 text-black">
+    <MagicBentoCard
+      className="card card--border-glow"
+      glowColor="132, 0, 255"
+      enableTilt
+      clickEffect
+      enableMagnetism
+      style={{ backgroundColor: "#0a0118" } as React.CSSProperties}
+    >
+      <div className="p-6 text-white">
         <div className="flex items-start gap-3">
-          <Quote className="h-6 w-6 mt-1 opacity-80" />
+          <Quote className="h-6 w-6 mt-1 opacity-80 text-purple-300" />
           <div className="flex-1 space-y-3">
-            <blockquote className="text-sm leading-relaxed font-medium">
+            <blockquote className="text-base leading-relaxed font-medium">
               "{quotes[currentQuote].text}"
             </blockquote>
-            <p className="text-xs opacity-80">— {quotes[currentQuote].author}</p>
+            <p className="text-xs text-purple-200/80">— {quotes[currentQuote].author}</p>
             <Button
               onClick={getNewQuote}
               variant="ghost"
               size="sm"
-              className="text-white hover:bg-white/20 gap-2 transition-smooth"
+              className="text-white hover:bg-white/10 gap-2 transition-smooth"
             >
               <RefreshCw className="h-4 w-4" />
               New Quote
             </Button>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </MagicBentoCard>
   );
 };
 

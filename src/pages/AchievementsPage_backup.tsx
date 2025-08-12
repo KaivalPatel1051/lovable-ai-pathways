@@ -5,6 +5,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+// import CountUp from '@/components/CountUp'; // Not used
+// import Counter from '@/components/Counter'; // Not used
 import { UserCounter, ReelCounter, MessageCounter, SobrietyCounter } from '@/components/BackendCounter';
 import {
   ArrowLeft,
@@ -20,18 +22,22 @@ import {
   Send
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+// The error is coming from this import. We will not use it for now.
+// import { MagicBentoCard, DarkPalette } from '@/components/MagicBento';
 
-// Temporary replacement for MagicBentoCard
+// This is a temporary replacement for MagicBentoCard to fix the error.
+// It uses a simple div with the same classes.
 const FixedBentoCard = ({ className, children, style }: { className?: string; children: React.ReactNode; style?: React.CSSProperties }) => (
   <div className={className} style={style}>
     {children}
   </div>
 );
 
-// Define fallback for DarkPalette
+// Define a fallback for DarkPalette if it was used from MagicBento
 const DarkPalette = {
-  surface: 'hsl(220 10% 15%)'
+  surface: 'hsl(220 10% 15%)' // A default dark card color
 };
+
 
 interface Achievement {
   id: string;
@@ -93,63 +99,60 @@ const AchievementsPage = () => {
         verified: false,
         daysSober: 90
       },
-      content: "Just completed my first 90 days! 🙌\n\nStarted attending daily NA meetings and it's made all the difference. The support from this community has been incredible. Feeling more stable and focused than I have in years.\n\n#90Days #Recovery #Community",
-      image: '/api/placeholder/400/300',
+      content: "90 days clean! 💪 Started going to the gym regularly and it's become my new addiction (the good kind). Physical fitness has been crucial in my recovery. Who else uses exercise as part of their recovery toolkit?",
       milestone: {
         type: 'days',
         value: 90,
-        description: '90 Days Sober'
+        description: '90 Days Clean'
       },
-      timestamp: new Date(Date.now() - 86400000),
-      likes: 142,
-      comments: 34,
+      timestamp: new Date(Date.now() - 7200000),
+      likes: 156,
+      comments: 45,
       shares: 12,
-      isLiked: false,
-      tags: ['milestone', 'support', 'na']
+      isLiked: true,
+      tags: ['fitness', 'milestone', '90days']
     },
     {
       id: '3',
       user: {
-        name: 'Jenny L.',
+        name: 'Jessica L.',
         avatar: '/api/placeholder/40/40',
-        verified: true,
-        daysSober: 730
+        verified: false,
+        daysSober: 180
       },
-      content: "Two years! Who would have thought? 😊\n\nRebuilding relationships with my family has been the most rewarding part of this journey. Today I'm having lunch with my sister for the first time in over 3 years.\n\n#TwoYears #Family #Healing",
-      image: '/api/placeholder/400/300',
+      content: "6 months sober and I finally feel like myself again. The fog has lifted, relationships are healing, and I'm sleeping through the night. If you're on day 1, 10, or 100 - keep going. It gets so much better. 🌟",
       milestone: {
-        type: 'years',
-        value: 2,
-        description: 'Two Years Sober'
+        type: 'months',
+        value: 6,
+        description: '6 Months Sober'
       },
-      timestamp: new Date(Date.now() - 172800000),
-      likes: 312,
+      timestamp: new Date(Date.now() - 14400000),
+      likes: 203,
       comments: 67,
       shares: 28,
       isLiked: false,
-      tags: ['milestone', 'family', 'relationships']
+      tags: ['sixmonths', 'healing', 'hope']
     },
     {
       id: '4',
       user: {
-        name: 'Alex T.',
+        name: 'David K.',
         avatar: '/api/placeholder/40/40',
-        verified: false,
-        daysSober: 30
+        verified: true,
+        daysSober: 45
       },
-      content: "One month down, forever to go! 🌙\n\nSwitched to a new therapist who specializes in addiction recovery. Already feeling like I'm getting tools to handle triggers better.\n\n#30Days #Therapy #Growth",
-      image: '/api/placeholder/400/300',
+      content: "45 days and counting! Today I completed my first 5K run since getting sober. Small victories matter just as much as the big ones. What small win are you celebrating today? 🏃‍♂️",
       milestone: {
-        type: 'days',
-        value: 30,
-        description: '30 Days Sober'
+        type: 'goal',
+        value: 1,
+        description: 'First 5K Completed'
       },
-      timestamp: new Date(Date.now() - 259200000),
-      likes: 89,
+      timestamp: new Date(Date.now() - 21600000),
+      likes: 98,
       comments: 23,
-      shares: 7,
+      shares: 8,
       isLiked: false,
-      tags: ['milestone', 'therapy', 'progress']
+      tags: ['fitness', 'goals', 'smallwins']
     }
   ];
 
@@ -192,11 +195,21 @@ const AchievementsPage = () => {
   };
 
   const getMilestoneIcon = (type: string) => {
-    return <Trophy className="h-4 w-4" />;
+    switch (type) {
+      case 'years':
+      case 'months':
+      case 'days':
+        return <Trophy className="h-4 w-4" />;
+      case 'goal':
+        return <Trophy className="h-4 w-4" />;
+      default:
+        return <Trophy className="h-4 w-4" />;
+    }
   };
 
   return (
     <div className="min-h-screen bg-background pb-20">
+      {/* Header */}
       <div className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b border-border">
         <div className="flex items-center justify-between p-4">
           <Button
@@ -226,158 +239,166 @@ const AchievementsPage = () => {
           </TabsList>
 
           <TabsContent value="feed" className="space-y-4">
+            {/* New Post Card */}
             {showNewPost && (
               <FixedBentoCard className="rounded-xl" style={{ backgroundColor: DarkPalette.surface }}>
                 <Card className="rounded-xl border-border/40 bg-transparent">
-                  <CardHeader>
-                    <CardTitle className="text-lg">Share Your Achievement</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <Textarea
-                      placeholder="What milestone are you celebrating today? Share your story to inspire others..."
-                      value={newPost}
-                      onChange={(e) => setNewPost(e.target.value)}
-                      className="min-h-[100px]"
-                    />
-                    <div className="flex justify-between items-center">
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
-                          <Camera className="h-4 w-4 mr-2" />
-                          Add Photo
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          <Trophy className="h-4 w-4 mr-2" />
-                          Add Milestone
-                        </Button>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setShowNewPost(false)}
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          size="sm"
-                          onClick={handleNewPost}
-                          disabled={!newPost.trim()}
-                        >
-                          <Send className="h-4 w-4 mr-2" />
-                          Share
-                        </Button>
-                      </div>
+                <CardHeader>
+                  <CardTitle className="text-lg">Share Your Achievement</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <Textarea
+                    placeholder="What milestone are you celebrating today? Share your story to inspire others..."
+                    value={newPost}
+                    onChange={(e) => setNewPost(e.target.value)}
+                    className="min-h-[100px]"
+                  />
+                  <div className="flex justify-between items-center">
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm">
+                        <Camera className="h-4 w-4 mr-2" />
+                        Add Photo
+                      </Button>
+                      <Button variant="outline" size="sm">
+                        <Trophy className="h-4 w-4 mr-2" />
+                        Add Milestone
+                      </Button>
                     </div>
-                  </CardContent>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setShowNewPost(false)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={handleNewPost}
+                        disabled={!newPost.trim()}
+                      >
+                        <Send className="h-4 w-4 mr-2" />
+                        Share
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
                 </Card>
               </FixedBentoCard>
             )}
 
+            {/* Achievement Feed */}
             {achievements.map((achievement) => (
               <FixedBentoCard key={achievement.id} className="rounded-xl" style={{ backgroundColor: DarkPalette.surface }}>
                 <Card className="overflow-hidden rounded-xl border-border/40 bg-transparent">
                   <CardContent className="p-0">
-                    <div className="p-4 pb-0">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center space-x-3">
-                          <Avatar className="h-12 w-12">
-                            <AvatarImage src={achievement.user.avatar} />
-                            <AvatarFallback>{achievement.user.name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-semibold">{achievement.user.name}</span>
-                              {achievement.user.verified && (
-                                <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
-                                  <span className="text-white text-xs">✓</span>
-                                </div>
-                              )}
-                            </div>
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                              <span>{formatTimeAgo(achievement.timestamp)}</span>
-                              <span>•</span>
-                              <span>{achievement.user.daysSober} days sober</span>
-                            </div>
+                  {/* Post Header */}
+                  <div className="p-4 pb-0">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-3">
+                        <Avatar className="h-12 w-12">
+                          <AvatarImage src={achievement.user.avatar} />
+                          <AvatarFallback>{achievement.user.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold">{achievement.user.name}</span>
+                            {achievement.user.verified && (
+                              <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+                                <span className="text-white text-xs">✓</span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <span>{formatTimeAgo(achievement.timestamp)}</span>
+                            <span>•</span>
+                            <span>{achievement.user.daysSober} days sober</span>
                           </div>
                         </div>
-                        <Button variant="ghost" size="sm">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
                       </div>
-
-                      <div className="mb-3">
-                        <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
-                          {getMilestoneIcon(achievement.milestone.type)}
-                          <span className="ml-2">{achievement.milestone.description}</span>
-                        </Badge>
-                      </div>
+                      <Button variant="ghost" size="sm">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
                     </div>
 
+                    {/* Milestone Badge */}
+                    <div className="mb-3">
+                      <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
+                        {getMilestoneIcon(achievement.milestone.type)}
+                        <span className="ml-2">{achievement.milestone.description}</span>
+                      </Badge>
+                    </div>
+                  </div>
+
+                  {/* Post Content */}
+                  <div className="px-4 pb-3">
+                    <p className="text-foreground whitespace-pre-line leading-relaxed">
+                      {achievement.content}
+                    </p>
+                  </div>
+
+                  {/* Post Image */}
+                  {achievement.image && (
                     <div className="px-4 pb-3">
-                      <p className="text-foreground whitespace-pre-line leading-relaxed">
-                        {achievement.content}
-                      </p>
+                      <img
+                        src={achievement.image}
+                        alt="Achievement"
+                        className="w-full rounded-lg object-cover max-h-80"
+                      />
                     </div>
+                  )}
 
-                    {achievement.image && (
-                      <div className="px-4 pb-3">
-                        <img
-                          src={achievement.image}
-                          alt="Achievement"
-                          className="w-full rounded-lg object-cover max-h-80"
-                        />
-                      </div>
-                    )}
-
-                    <div className="px-4 py-2 border-t border-border">
-                      <div className="flex items-center justify-between text-sm text-muted-foreground">
-                        <span>{achievement.likes + (likedPosts.has(achievement.id) ? 1 : 0)} likes</span>
-                        <div className="flex gap-4">
-                          <span>{achievement.comments} comments</span>
-                          <span>{achievement.shares} shares</span>
-                        </div>
+                  {/* Engagement Stats */}
+                  <div className="px-4 py-2 border-t border-border">
+                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                      <span>{achievement.likes + (likedPosts.has(achievement.id) ? 1 : 0)} likes</span>
+                      <div className="flex gap-4">
+                        <span>{achievement.comments} comments</span>
+                        <span>{achievement.shares} shares</span>
                       </div>
                     </div>
+                  </div>
 
-                    <div className="px-4 py-3 border-t border-border">
-                      <div className="flex items-center justify-around">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleLike(achievement.id)}
-                          className={
-                            'flex-1 ' +
-                            ((likedPosts.has(achievement.id) || achievement.isLiked)
-                              ? 'text-red-500 hover:text-red-600'
-                              : 'text-muted-foreground hover:text-foreground')
-                          }
-                        >
-                          <Heart className={
-                            'h-4 w-4 mr-2 ' +
-                            ((likedPosts.has(achievement.id) || achievement.isLiked) ? 'fill-current' : '')
-                          } />
-                          Like
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleComment(achievement)}
-                          className="flex-1 text-muted-foreground hover:text-foreground"
-                        >
-                          <MessageCircle className="h-4 w-4 mr-2" />
-                          Comment
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleShare(achievement)}
-                          className="flex-1 text-muted-foreground hover:text-foreground"
-                        >
-                          <Share className="h-4 w-4 mr-2" />
-                          Share
-                        </Button>
-                      </div>
+                  {/* Action Buttons */}
+                  <div className="px-4 py-3 border-t border-border">
+                    <div className="flex items-center justify-around">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleLike(achievement.id)}
+                        className={
+                          'flex-1 ' +
+                          ((likedPosts.has(achievement.id) || achievement.isLiked)
+                            ? 'text-red-500 hover:text-red-600'
+                            : 'text-muted-foreground hover:text-foreground')
+                        }
+                      >
+                        <Heart className={
+                          'h-4 w-4 mr-2 ' +
+                          ((likedPosts.has(achievement.id) || achievement.isLiked) ? 'fill-current' : '')
+                        } />
+                        Like
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleComment(achievement)}
+                        className="flex-1 text-muted-foreground hover:text-foreground"
+                      >
+                        <MessageCircle className="h-4 w-4 mr-2" />
+                        Comment
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleShare(achievement)}
+                        className="flex-1 text-muted-foreground hover:text-foreground"
+                      >
+                        <Share className="h-4 w-4 mr-2" />
+                        Share
+                      </Button>
                     </div>
+                  </div>
                   </CardContent>
                 </Card>
               </FixedBentoCard>
@@ -387,17 +408,17 @@ const AchievementsPage = () => {
           <TabsContent value="my-achievements" className="space-y-4">
             <FixedBentoCard className="rounded-xl" style={{ backgroundColor: DarkPalette.surface }}>
               <Card className="rounded-xl border-border/40 bg-transparent">
-                <CardContent className="p-8 text-center">
-                  <Trophy className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-                  <h3 className="text-lg font-semibold mb-2">No Posts Yet</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Share your first achievement to inspire others in the community.
-                  </p>
-                  <Button onClick={() => setShowNewPost(true)}>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Create Your First Post
-                  </Button>
-                </CardContent>
+              <CardContent className="p-8 text-center">
+                <Trophy className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
+                <h3 className="text-lg font-semibold mb-2">No Posts Yet</h3>
+                <p className="text-muted-foreground mb-4">
+                  Share your first achievement to inspire others in the community.
+                </p>
+                <Button onClick={() => setShowNewPost(true)}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create Your First Post
+                </Button>
+              </CardContent>
               </Card>
             </FixedBentoCard>
           </TabsContent>
@@ -534,6 +555,7 @@ const AchievementsPage = () => {
             </FixedBentoCard>
           </TabsContent>
         </Tabs>
+        </div>
       </div>
     </div>
   );

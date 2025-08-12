@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Calendar, Trophy, Target, Flame, Heart, Brain, ArrowLeft, Play, Pause } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { MagicBentoCard, DarkPalette } from '@/components/MagicBento';
 
 const TrackerPage = () => {
   const navigate = useNavigate();
@@ -130,81 +131,86 @@ const TrackerPage = () => {
 
           <TabsContent value="streak" className="space-y-4">
             {/* Main Streak Card */}
-            <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
-              <CardHeader className="text-center">
-                <div className="mx-auto w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mb-4">
-                  <Flame className="h-10 w-10 text-primary" />
-                </div>
-                <CardTitle className="text-3xl font-bold text-primary">
-                  {sobrietyData.currentStreak} Days
-                </CardTitle>
-                <p className="text-muted-foreground">Current Streak</p>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center">
-                    <p className="text-2xl font-bold">{sobrietyData.longestStreak}</p>
-                    <p className="text-sm text-muted-foreground">Longest Streak</p>
+            <MagicBentoCard className="rounded-xl" enableTilt clickEffect enableMagnetism style={{ backgroundColor: DarkPalette.surface } as React.CSSProperties}>
+              <Card className="rounded-xl border-border/40" style={{ backgroundColor: DarkPalette.surface }}>
+                <CardHeader className="text-center">
+                  <div className="mx-auto w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mb-4">
+                    <Flame className="h-10 w-10 text-primary" />
                   </div>
-                  <div className="text-center">
-                    <p className="text-2xl font-bold">{sobrietyData.totalDaysSober}</p>
-                    <p className="text-sm text-muted-foreground">Total Days</p>
-                  </div>
-                </div>
-                
-                {nextMilestone && (
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium">Next: {nextMilestone.title}</span>
-                      <span className="text-sm text-muted-foreground">
-                        {nextMilestone.days - sobrietyData.currentStreak} days to go
-                      </span>
+                  <CardTitle className="text-3xl font-bold text-primary">
+                    {sobrietyData.currentStreak} Days
+                  </CardTitle>
+                  <p className="text-muted-foreground">Current Streak</p>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="text-center">
+                      <p className="text-2xl font-bold">{sobrietyData.longestStreak}</p>
+                      <p className="text-sm text-muted-foreground">Longest Streak</p>
                     </div>
-                    <Progress value={progressToNext} className="h-2" />
+                    <div className="text-center">
+                      <p className="text-2xl font-bold">{sobrietyData.totalDaysSober}</p>
+                      <p className="text-sm text-muted-foreground">Total Days</p>
+                    </div>
                   </div>
-                )}
-              </CardContent>
-            </Card>
+                  
+                  {nextMilestone && (
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">Next: {nextMilestone.title}</span>
+                        <span className="text-sm text-muted-foreground">
+                          {nextMilestone.days - sobrietyData.currentStreak} days to go
+                        </span>
+                      </div>
+                      <Progress value={progressToNext} className="h-2" />
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </MagicBentoCard>
 
             {/* Milestones */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Trophy className="h-5 w-5" />
-                  Milestones
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-3">
-                  {sobrietyData.milestones.map((milestone) => (
-                    <div
-                      key={milestone.days}
-                      className={`p-3 rounded-lg border ${
-                        milestone.achieved
-                          ? 'bg-green-50 border-green-200 dark:bg-green-950 dark:border-green-800'
-                          : 'bg-muted border-border'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="font-medium">{milestone.title}</p>
-                          <p className="text-sm text-muted-foreground">{milestone.days} days</p>
+            <MagicBentoCard className="rounded-xl" enableTilt clickEffect enableMagnetism style={{ backgroundColor: DarkPalette.surface } as React.CSSProperties}>
+              <Card className="rounded-xl border-border/40" style={{ backgroundColor: DarkPalette.surface }}>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Trophy className="h-5 w-5" />
+                    Milestones
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 gap-3">
+                    {sobrietyData.milestones.map((milestone) => (
+                      <div
+                        key={milestone.days}
+                        className={`p-3 rounded-lg border ${
+                          milestone.achieved
+                            ? 'bg-green-50 border-green-200 dark:bg-green-950 dark:border-green-800'
+                            : 'bg-muted border-border'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium">{milestone.title}</p>
+                            <p className="text-sm text-muted-foreground">{milestone.days} days</p>
+                          </div>
+                          {milestone.achieved && (
+                            <Trophy className="h-5 w-5 text-green-600" />
+                          )}
                         </div>
-                        {milestone.achieved && (
-                          <Trophy className="h-5 w-5 text-green-600" />
-                        )}
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </MagicBentoCard>
           </TabsContent>
 
           <TabsContent value="wellness" className="space-y-4">
             {/* Wellness Metrics */}
-            <Card>
-              <CardHeader>
+            <MagicBentoCard className="rounded-xl" enableTilt clickEffect enableMagnetism style={{ backgroundColor: DarkPalette.surface } as React.CSSProperties}>
+              <Card className="rounded-xl border-border/40" style={{ backgroundColor: DarkPalette.surface }}>
+                <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Heart className="h-5 w-5" />
                   Daily Wellness Check
@@ -224,31 +230,37 @@ const TrackerPage = () => {
                 ))}
                 <Button className="w-full mt-4">Update Today's Check-in</Button>
               </CardContent>
-            </Card>
+              </Card>
+            </MagicBentoCard>
 
             {/* Quick Stats */}
             <div className="grid grid-cols-2 gap-4">
-              <Card>
-                <CardContent className="p-4 text-center">
+              <MagicBentoCard className="rounded-xl" enableTilt clickEffect enableMagnetism style={{ backgroundColor: DarkPalette.surface } as React.CSSProperties}>
+                <Card className="rounded-xl border-border/40" style={{ backgroundColor: DarkPalette.surface }}>
+                  <CardContent className="p-4 text-center">
                   <Calendar className="h-8 w-8 mx-auto mb-2 text-primary" />
                   <p className="text-2xl font-bold">7</p>
                   <p className="text-sm text-muted-foreground">Check-in Streak</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4 text-center">
+                  </CardContent>
+                </Card>
+              </MagicBentoCard>
+              <MagicBentoCard className="rounded-xl" enableTilt clickEffect enableMagnetism style={{ backgroundColor: DarkPalette.surface } as React.CSSProperties}>
+                <Card className="rounded-xl border-border/40" style={{ backgroundColor: DarkPalette.surface }}>
+                  <CardContent className="p-4 text-center">
                   <Target className="h-8 w-8 mx-auto mb-2 text-primary" />
                   <p className="text-2xl font-bold">85%</p>
                   <p className="text-sm text-muted-foreground">Weekly Goal</p>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </MagicBentoCard>
             </div>
           </TabsContent>
 
           <TabsContent value="exercises" className="space-y-4">
             {/* Breathing Exercise */}
-            <Card>
-              <CardHeader>
+            <MagicBentoCard className="rounded-xl" enableTilt clickEffect enableMagnetism style={{ backgroundColor: DarkPalette.surface } as React.CSSProperties}>
+              <Card className="rounded-xl border-border/40" style={{ backgroundColor: DarkPalette.surface }}>
+                <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Brain className="h-5 w-5" />
                   Quick Breathing Exercise
@@ -289,11 +301,13 @@ const TrackerPage = () => {
                   </div>
                 )}
               </CardContent>
-            </Card>
+              </Card>
+            </MagicBentoCard>
 
             {/* Exercise Library */}
-            <Card>
-              <CardHeader>
+            <MagicBentoCard className="rounded-xl" enableTilt clickEffect enableMagnetism style={{ backgroundColor: DarkPalette.surface } as React.CSSProperties}>
+              <Card className="rounded-xl border-border/40" style={{ backgroundColor: DarkPalette.surface }}>
+                <CardHeader>
                 <CardTitle>Relaxation Exercises</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -321,7 +335,8 @@ const TrackerPage = () => {
                   </div>
                 ))}
               </CardContent>
-            </Card>
+              </Card>
+            </MagicBentoCard>
           </TabsContent>
         </Tabs>
       </div>

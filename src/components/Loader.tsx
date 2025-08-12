@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import BlurText from './BlurText';
-import './Loader.css';
+import BlurText from './BlurText'; // Assuming BlurText component is in the same directory
+import './Loader.css'; // Assuming Loader.css is in the same directory
 
 interface LoaderProps {
   onLoadingComplete: () => void;
@@ -23,45 +23,62 @@ const Loader: React.FC<LoaderProps> = ({ onLoadingComplete }) => {
   ];
 
   useEffect(() => {
-    setShowAddictionFreeLife(true);
-
-    const intervalId = setTimeout(() => {
+    // This effect runs once on mount to control the entire loading sequence.
+    const startLoading = () => {
       const interval = setInterval(() => {
         setPercentage(prev => {
           const newPercentage = prev + 1.2;
 
+          // Update the loading step text based on progress
           const stepIndex = Math.floor((newPercentage / 100) * loadingSteps.length);
           if (stepIndex !== currentLoadingStep && stepIndex < loadingSteps.length) {
             setCurrentLoadingStep(stepIndex);
           }
 
+          // Check if loading is complete
           if (newPercentage >= 100) {
             clearInterval(interval);
             setCurrentLoadingStep(loadingSteps.length - 1);
-            setShowAddictionFreeLife(false); // Hide “ADDICTION FREE LIFE”
+            setShowAddictionFreeLife(false); // Hide "ADDICTION FREE LIFE" text
 
+            // Wait for the loading stage to animate out before showing the final animation
             setTimeout(() => {
-              setShowFinalAnimation(true); // Show “NISCHAY” animation
+              setShowFinalAnimation(true); // Trigger the "NISCHAY" animation
+
+              // --- KEY CHANGE ---
+              // Calculate the duration of the final "NISCHAY" animation.
+              // The BlurText animation is the longest part: 7 letters * 0.8s stepDuration = 5.6s.
+              // We'll use 5800ms to give it a small buffer to complete fully.
+              const finalAnimationDuration = 5800;
 
               setTimeout(() => {
-                setFadeOut(true);
+                setFadeOut(true); // Start fading out the entire loader screen
+
+                // The fade-out animation itself takes 1s (defined in Loader.css).
+                // We call onLoadingComplete after this fade-out is finished.
                 setTimeout(() => {
                   onLoadingComplete();
                 }, 1000);
-              }, 3000);
-            }, 800);
+              }, finalAnimationDuration);
+            }, 800); // 800ms delay for a smooth transition between loading stages
 
             return 100;
           }
           return newPercentage;
         });
-      }, 40);
-    }, 1000);
+      }, 40); // This interval controls the speed of the progress bar
+
+      return () => clearInterval(interval); // Cleanup on unmount
+    };
+
+    // A brief delay before starting the loader for a smoother entry
+    const timeoutId = setTimeout(startLoading, 500);
 
     return () => {
-      clearTimeout(intervalId);
+      clearTimeout(timeoutId);
     };
-  }, [currentLoadingStep, loadingSteps.length, onLoadingComplete]);
+    // The dependency array is empty to ensure this effect runs only once.
+  }, []);
 
   return (
     <div className={`blur-text-loader ${fadeOut ? 'fade-out' : ''}`}>
@@ -83,6 +100,7 @@ const Loader: React.FC<LoaderProps> = ({ onLoadingComplete }) => {
               transition={{ duration: 0.8 }}
               className="loading-stage"
             >
+              {/* This section is shown during the progress bar loading */}
               {showAddictionFreeLife && (
                 <>
                   <BlurText
@@ -94,25 +112,23 @@ const Loader: React.FC<LoaderProps> = ({ onLoadingComplete }) => {
                     stepDuration={0.5}
                   />
 
-                  {/* Progress Bar + Steps */}
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.5 }}
                     className="progress-section"
                   >
-                    <div className="progress-section">
-                      {/* Elegant single progress line */}
-                      <div className="w-full h-0.5 bg-muted rounded-full overflow-hidden">
+                    {/* The single elegant progress line */}
+                    <div className="progress-bar">
                         <motion.div
-                          className="h-full bg-primary rounded-full animate-serene-progress"
+                          className="progress-fill"
                           initial={{ width: 0 }}
                           animate={{ width: `${percentage}%` }}
                           transition={{ duration: 0.6, ease: 'easeOut' }}
                         />
-                      </div>
                     </div>
 
+                    {/* The animated loading step text */}
                     <AnimatePresence mode="wait">
                       <motion.p
                         key={currentLoadingStep}
@@ -138,24 +154,20 @@ const Loader: React.FC<LoaderProps> = ({ onLoadingComplete }) => {
               transition={{ duration: 2, ease: 'easeInOut' }}
               className="final-stage"
             >
+              {/* The final "NISCHAY" animation */}
               <BlurText
                 text="NISCHAY"
                 delay={100}
                 animateBy="letters"
                 direction="top"
-                className="final-blur-title serene-text"
+                className="final-blur-title"
                 stepDuration={0.8}
-                animationFrom={{ filter: 'blur(10px)', opacity: 0, scale: 0.95 }}
-                animationTo={[
-                  { filter: 'blur(5px)', opacity: 0.7, scale: 0.98 },
-                  { filter: 'blur(0px)', opacity: 1, scale: 1.02 }
-                ]}
               />
               <motion.div
                 initial={{ width: 0, opacity: 0 }}
                 animate={{ width: '60%', opacity: 0.8 }}
                 transition={{ duration: 1.5, delay: 1 }}
-                className="h-0.5 bg-primary rounded-full mx-auto mt-4"
+                className="final-underline"
               />
             </motion.div>
           )}

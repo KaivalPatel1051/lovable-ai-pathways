@@ -13,6 +13,7 @@ import {
   Check, CheckCheck, Circle, Users, Bot, MessageCircle
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { MagicBentoCard, DarkPalette } from '@/components/MagicBento';
 
 // Enhanced message interface with social media features
 interface Message {
@@ -399,7 +400,8 @@ const ChatPage = () => {
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col">
         {selectedChat ? (
-          <>
+          <MagicBentoCard className="rounded-xl flex-1 flex flex-col" enableTilt clickEffect enableMagnetism style={{ backgroundColor: DarkPalette.surface } as React.CSSProperties}>
+            <div className="rounded-xl border border-border/40 flex-1 flex flex-col" style={{ backgroundColor: DarkPalette.surface }}>
             {/* Chat Header */}
             <div className="flex items-center justify-between p-4 border-b border-border bg-card">
               <div className="flex items-center gap-3">
@@ -617,11 +619,12 @@ const ChatPage = () => {
                 Crisis support available 24/7 • Your conversations are confidential
               </p>
             </div>
-          </>
+            </div>
+          </MagicBentoCard>
         ) : (
           /* No Chat Selected State */
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-center space-y-4">
+          <MagicBentoCard className="rounded-xl flex-1 flex items-center justify-center" enableTilt clickEffect enableMagnetism style={{ backgroundColor: DarkPalette.surface } as React.CSSProperties}>
+            <div className="text-center space-y-4 p-8 rounded-xl border border-border/40" style={{ backgroundColor: DarkPalette.surface }}>
               <MessageCircle className="h-16 w-16 mx-auto text-muted-foreground" />
               <div>
                 <h3 className="text-lg font-semibold">Select a conversation</h3>
@@ -632,7 +635,7 @@ const ChatPage = () => {
                 Start New Chat
               </Button>
             </div>
-          </div>
+          </MagicBentoCard>
         )}
       </div>
     </div>

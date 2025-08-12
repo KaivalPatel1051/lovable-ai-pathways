@@ -49,6 +49,7 @@ const TextType = ({
   const [displayedText, setDisplayedText] = useState("");
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [didComplete, setDidComplete] = useState(false);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(!startOnVisible);
   const cursorRef = useRef<HTMLSpanElement>(null);
@@ -143,6 +144,12 @@ const TextType = ({
           timeout = setTimeout(() => {
             setIsDeleting(true);
           }, pauseDuration);
+        } else if (!loop && !didComplete) {
+          // Single text, no loop: fire completion callback once
+          if (onSentenceComplete) {
+            onSentenceComplete(textArray[currentTextIndex], currentTextIndex);
+          }
+          setDidComplete(true);
         }
       }
     };
@@ -169,6 +176,7 @@ const TextType = ({
     reverseMode,
     variableSpeed,
     onSentenceComplete,
+    didComplete,
   ]);
 
   const shouldHideCursor =

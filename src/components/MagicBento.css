@@ -1,0 +1,130 @@
+:root {
+  --mb-card-radius: 16px;
+  --mb-card-border: 1px;
+  --mb-card-bg: #060010;
+  --mb-card-fg: 240 6% 90%;
+  --mb-card-muted: 240 6% 70%;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.card {
+  position: relative;
+  border-radius: var(--mb-card-radius);
+  border: var(--mb-card-border) solid rgba(255, 255, 255, 0.08);
+  background: var(--mb-card-bg);
+  overflow: hidden;
+  padding: 20px;
+  color: hsl(var(--mb-card-fg));
+  transform-style: preserve-3d;
+  will-change: transform, box-shadow, filter;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.card__label {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(var(--mb-card-muted));
+}
+
+.card__content {
+  display: grid;
+  gap: 6px;
+}
+
+.card__title {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.card__description {
+  font-size: 14px;
+  color: hsl(var(--mb-card-muted));
+}
+
+/* Particle base (cloned elements receive this class) */
+.particle {
+  filter: blur(0.2px);
+}
+
+/* Border glow and cursor-following light */
+.card--border-glow {
+  --glow-color: 132, 0, 255; /* default RGB */
+  --glow-intensity: 0;
+  --glow-radius: 260px;
+  --glow-x: 50%;
+  --glow-y: 50%;
+  box-shadow:
+    0 0 calc(20px * var(--glow-intensity)) rgba(var(--glow-color), 0.5),
+    inset 0 0 calc(30px * var(--glow-intensity)) rgba(var(--glow-color), 0.2);
+}
+
+.card--border-glow::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle var(--glow-radius) at var(--glow-x) var(--glow-y),
+    rgba(var(--glow-color), calc(0.35 * var(--glow-intensity))) 0%,
+    rgba(var(--glow-color), calc(0.15 * var(--glow-intensity))) 35%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* Lift on hover (when not disabled by props) */
+.card:hover {
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.4),
+    0 0 40px rgba(132, 0, 255, 0.2);
+}
+
+/* Optional text auto hide (title remains, description fades until hover) */
+.card--text-autohide .card__description {
+  opacity: 0.0;
+  transform: translateY(6px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.card--text-autohide:hover .card__description {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Body-level spotlight */
+.global-spotlight {
+  filter: blur(0.6px);
+}
+
+/* Container to ensure particles and ripples stay clipped */
+.particle-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: inherit;
+}
