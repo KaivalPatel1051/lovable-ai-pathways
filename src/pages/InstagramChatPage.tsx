@@ -17,6 +17,7 @@ import {
 import { supabase } from '../lib/supabase';
 import { useSupabaseAuth } from '../contexts/SupabaseAuthContext';
 import NischayLoader from '../components/NischayLoader';
+import { toast } from 'sonner';
 
 interface Friend {
   id: string;
@@ -42,6 +43,7 @@ interface Message {
   created_at: string;
   message_type: 'text' | 'image' | 'emoji';
   is_read: boolean;
+  media_url?: string;
   sender?: {
     username: string;
     first_name: string;
@@ -61,6 +63,7 @@ interface Chat {
 
 const InstagramChatPage: React.FC = () => {
   const { user } = useSupabaseAuth();
+  // using sonner toast
   const [friends, setFriends] = useState<Friend[]>([]);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -68,6 +71,7 @@ const InstagramChatPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (user) {
@@ -347,6 +351,20 @@ const InstagramChatPage: React.FC = () => {
 
       setSelectedChat(chatData);
       loadMessages(existingChat.id, friend);
+
+      // Mark messages as read for this chat (not sent by current user)
+      try {
+        if (user?.id) {
+          await supabase
+            .from('messages')
+            .update({ is_read: true })
+            .eq('chat_id', existingChat.id)
+            .neq('sender_id', user.id)
+            .eq('is_read', false);
+        }
+      } catch (e) {
+        console.error('Error marking messages as read:', e);
+      }
     } catch (error) {
       console.error('Error opening chat:', error);
       // Create demo chat
@@ -490,6 +508,115 @@ const InstagramChatPage: React.FC = () => {
       };
       setMessages(prev => [...prev, newMsg]);
       setNewMessage('');
+    }
+  };
+
+  // Quick emoji reaction (e.g., heart) when no text is typed
+  const sendQuickEmoji = async (emoji: string) => {
+    if (!selectedChat || !user) return;
+
+    const messageData = {
+      content: emoji,
+      sender_id: user.id,
+      chat_id: selectedChat.id,
+      message_type: 'emoji' as const,
+      is_read: false
+    };
+
+    try {
+      const { data, error } = await supabase
+        .from('messages')
+        .insert(messageData)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error sending emoji message:', error);
+      }
+
+      const newMsg: Message = {
+        id: data?.id || `temp-${Date.now()}`,
+        ...messageData,
+        created_at: new Date().toISOString(),
+        sender: {
+          username: user.user_metadata?.username || 'You',
+          first_name: user.user_metadata?.first_name || 'You',
+          profile_picture: user.user_metadata?.profile_picture
+        }
+      };
+      setMessages(prev => [...prev, newMsg]);
+    } catch (e) {
+      console.error('Error sending quick emoji:', e);
+    }
+  };
+
+  const handleHeartClick = () => {
+    if (!newMessage.trim()) {
+      sendQuickEmoji('❤️');
+    }
+  };
+
+  // Image upload support via Supabase Storage
+  const handleImageButton = () => fileInputRef.current?.click();
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !selectedChat || !user) return;
+
+    try {
+      const path = `${user.id}/${Date.now()}-${file.name}`;
+      const { error: uploadError } = await supabase.storage
+        .from('chat-media')
+        .upload(path, file, { cacheControl: '3600', upsert: false });
+
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        toast.error(`Upload failed: ${uploadError.message}`);
+        return;
+      }
+
+      const { data: publicData } = supabase.storage.from('chat-media').getPublicUrl(path);
+      const mediaUrl = publicData?.publicUrl;
+
+      const { data, error } = await supabase
+        .from('messages')
+        .insert({
+          chat_id: selectedChat.id,
+          sender_id: user.id,
+          content: '',
+          message_type: 'image',
+          media_url: mediaUrl,
+          is_read: false
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error sending image message:', error);
+        toast.error(`Send failed: ${error.message}`);
+      }
+
+      const newMsg: Message = {
+        id: data?.id || `temp-${Date.now()}`,
+        content: '',
+        sender_id: user.id,
+        chat_id: selectedChat.id,
+        created_at: new Date().toISOString(),
+        message_type: 'image',
+        is_read: false,
+        media_url: mediaUrl,
+        sender: {
+          username: user.user_metadata?.username || 'You',
+          first_name: user.user_metadata?.first_name || 'You',
+          profile_picture: user.user_metadata?.profile_picture
+        }
+      };
+      setMessages(prev => [...prev, newMsg]);
+    } catch (e:any) {
+      console.error('Image send error:', e);
+      toast.error(`Error: ${e?.message || 'Could not send image'}`);
+    } finally {
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
@@ -683,7 +810,11 @@ const InstagramChatPage: React.FC = () => {
                         ? 'bg-blue-500 text-white' 
                         : 'bg-gray-100 text-gray-900'
                     }`}>
-                      <p className="text-sm">{message.content}</p>
+                      {message.message_type === 'image' && message.media_url ? (
+                        <img src={message.media_url} alt="sent image" className="max-w-full rounded-lg" />
+                      ) : (
+                        <p className="text-sm">{message.content}</p>
+                      )}
                     </div>
                   </motion.div>
                 );
@@ -698,9 +829,16 @@ const InstagramChatPage: React.FC = () => {
               <button className="p-2 hover:bg-gray-100 rounded-full">
                 <Camera size={20} className="text-gray-600" />
               </button>
-              <button className="p-2 hover:bg-gray-100 rounded-full">
+              <button className="p-2 hover:bg-gray-100 rounded-full" onClick={handleImageButton}>
                 <Image size={20} className="text-gray-600" />
               </button>
+              <input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                className="hidden"
+              />
               
               <div className="flex-1 flex items-center space-x-2 bg-gray-100 rounded-full px-4 py-2">
                 <input
@@ -724,7 +862,7 @@ const InstagramChatPage: React.FC = () => {
                   <Send size={16} />
                 </button>
               ) : (
-                <button className="p-2 hover:bg-gray-100 rounded-full">
+                <button className="p-2 hover:bg-gray-100 rounded-full" onClick={handleHeartClick}>
                   <Heart size={20} className="text-gray-600" />
                 </button>
               )}

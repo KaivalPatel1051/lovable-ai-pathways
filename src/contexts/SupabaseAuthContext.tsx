@@ -165,6 +165,15 @@ export const SupabaseAuthProvider: React.FC<SupabaseAuthProviderProps> = ({ chil
             // no-op
           }
         }
+
+        // Ensure we go to login after sign-out from anywhere
+        if (event === 'SIGNED_OUT') {
+          try {
+            window.location.replace('/login');
+          } catch (_) {
+            // no-op
+          }
+        }
         
         setLoading(false);
       }
@@ -233,6 +242,13 @@ export const SupabaseAuthProvider: React.FC<SupabaseAuthProviderProps> = ({ chil
       setUser(null);
       setProfile(null);
       setSession(null);
+
+      // Force a full redirect to clear any stale nested routes
+      try {
+        window.location.replace('/login');
+      } catch (_) {
+        // no-op
+      }
       
       return { error: null };
     } catch (error) {
